@@ -230,4 +230,29 @@ class PropertyRepo {
       return false;
     }
   }
+
+  static Future<Property> getPropertyDetail({required int propertyId}) async {
+    final queryParameters = {'propertyId': propertyId.toString()};
+
+    print('hi');
+
+    try {
+      var client = http.Client();
+      print('hi 1');
+      final uri =
+          Uri.https(baseUrl, '${propertyUrl}/${propertyId}', queryParameters);
+
+      var response = await client.get(uri);
+
+      print(response.body);
+
+      Property result =
+          Property.fromJson(response.body as Map<String, dynamic>);
+
+      return result;
+    } catch (e) {
+      log(e.toString());
+      throw Exception('get detail property failed');
+    }
+  }
 }

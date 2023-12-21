@@ -8,7 +8,7 @@ import 'package:http/http.dart' as http;
 
 class AuthRepo {
   static String baseUrl = 'pbl6.whitemage.tech';
-  static var signInUrl = 'api/auth/user/log-in';
+  static var signInUrl = 'api/auth/log-in';
   static var signUpUrl = 'api/auth/sign-up';
   static final FlutterSecureStorage storage = const FlutterSecureStorage();
 
@@ -71,5 +71,9 @@ class AuthRepo {
       log(e.toString());
       throw Exception('Sign up error');
     }
+  }
+
+  static Future<void> deleteAllTokenWhenLogout() async {
+    await storage.deleteAll();
   }
 }

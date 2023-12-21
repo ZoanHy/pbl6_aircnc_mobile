@@ -18,7 +18,7 @@ class Property extends Equatable {
   final double longitude;
   final String address;
   final String city;
-  final bool isFavorite;
+   bool isFavorite;
   final int hostId;
   final String hostName;
   final double rating;

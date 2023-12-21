@@ -15,7 +15,7 @@ class Booking {
   final int hostId;
   final String hostName;
   final String hostEmail;
-  final String hostPhoneNumber;
+  String? hostPhoneNumber;
   final String status;
   final DateTime checkInDate;
   final DateTime checkOutDate;

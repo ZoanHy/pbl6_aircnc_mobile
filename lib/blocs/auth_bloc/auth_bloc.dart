@@ -17,6 +17,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   AuthBloc() : super(AuthInitial()) {
     on<AuthAppStartedEvent>(_onAuthAppStartedEvent);
     on<AuthSignIn>(_onAuthSignIn);
+    on<AuthSignOutEvent>(_onAuthSignOutEvent);
   }
 
   FutureOr<void> _onAuthAppStartedEvent(
@@ -28,6 +29,10 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       AuthSignIn event, Emitter<AuthState> emit) async {
     User? user = await AuthRepo.signIn(event.email, event.password);
     if (user != null) {
+      emit(AuthLoadingState());
+
+      await Future.delayed(Duration(seconds: 2));
+
       emit(AuthSignInActionState(user: user));
       // emit(AunthenticateInitializedState(user: user));
     } else {
@@ -35,5 +40,12 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       emit(AunthenticateUninitializedState());
       emit(AuthErrorState());
     }
+  }
+
+  FutureOr<void> _onAuthSignOutEvent(
+      AuthSignOutEvent event, Emitter<AuthState> emit) async {
+    await AuthRepo.deleteAllTokenWhenLogout();
+
+    emit(AunthenticateUninitializedState());
   }
 }

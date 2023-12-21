@@ -28,3 +28,9 @@ class AuthSignInActionState extends AuthActionState {
   @override
   List<Object> get props => [user];
 }
+
+class AuthSignUpSuccessState extends AuthState {}
+
+class AuthSignUpFailedState extends AuthState {}
+
+class AuthLoadingState extends AuthState {}

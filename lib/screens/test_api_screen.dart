@@ -7,6 +7,7 @@ import 'package:pbl6_aircnc/repositories/auth_repo.dart';
 import 'package:pbl6_aircnc/repositories/booking_repo.dart';
 import 'package:pbl6_aircnc/repositories/property_repo.dart';
 import 'package:pbl6_aircnc/repositories/wishlist_repo.dart';
+import 'package:pbl6_aircnc/screens/booking_screen.dart';
 import 'package:pbl6_aircnc/screens/result_qr_code_screen.dart';
 
 class TestApiScreen extends StatefulWidget {
@@ -19,6 +20,12 @@ class TestApiScreen extends StatefulWidget {
 class _TestApiScreenState extends State<TestApiScreen> {
   final FlutterSecureStorage storage = const FlutterSecureStorage();
   var codeQr;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+  }
 
   void filterProperties() async {
     print('helo');
@@ -40,6 +47,11 @@ class _TestApiScreenState extends State<TestApiScreen> {
     User? user = await AuthRepo.signIn('zoan12345', '@Bcd1234');
     var token = storage.read(key: 'accessToken').toString();
     print(user);
+    // if (user != null) {
+    //   setState(() {
+    //     userTest = user;
+    //   });
+    // }
   }
 
   void SignUp() async {
@@ -81,11 +93,15 @@ class _TestApiScreenState extends State<TestApiScreen> {
   void getAllBookingOfGuest() async {
     List<Booking> lst = await BookingRepo.getAllBookingOfGuest(guestId: 136);
     Booking booking1 = lst[0];
-    setState(() {
-      codeQr = booking1.checkInCode;
-    });
-    // codeQr = booking1.checkInCode;
-    print('get void ${codeQr}');
+
+    print(lst);
+  }
+
+  void getDetailProperty() async {
+    print('test api');
+    Property detail = await PropertyRepo.getPropertyDetail(propertyId: 1);
+
+    print(detail);
   }
 
   @override
@@ -93,17 +109,23 @@ class _TestApiScreenState extends State<TestApiScreen> {
     // filterPropertiesOfHost();
     // postProperties();
     // signIn();
+    // print(userTest);
     // getWishLish();
     // SignUp();
     // addPropertyToWishList();
     // removePropertyToWishList();
     // getAllBookingOfGuest();
-    print('build ${codeQr}');
+    // print('build ${codeQr}');
 
-    // return Scaffold(
-    //   appBar: AppBar(title: Text('Test api')),
+    getDetailProperty();
+
+    return Scaffold(
+      appBar: AppBar(title: Text('Test api')),
+    );
+    // getAllBookingOfGuest();
+    // return ResultQrCodeScreen(code: codeQr);
+    // return BookingScreen(
+    //   user: userTest,
     // );
-    getAllBookingOfGuest();
-    return ResultQrCodeScreen(code: codeQr);
   }
 }

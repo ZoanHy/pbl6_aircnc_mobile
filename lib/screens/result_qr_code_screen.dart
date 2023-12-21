@@ -14,58 +14,38 @@ class ResultQrCodeScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
-          onPressed: () {},
+          onPressed: () {
+            Navigator.pop(context);
+          },
           icon: Icon(Icons.arrow_back_ios_new_sharp),
         ),
         title: Text('Result Qr code'),
       ),
-      body: Padding(
-        padding: EdgeInsets.all(12),
-        child: Column(
-          children: [
-            QrImageView(
-              data: code,
-              size: 150,
-              version: QrVersions.auto,
-            ),
-            Text(
-              'Scanned result',
-              style: TextStyle(
-                  fontSize: 16,
-                  color: Colors.black87,
-                  fontWeight: FontWeight.bold,
-                  letterSpacing: 1),
-            ),
-            SizedBox(
-              height: 10,
-            ),
-            Text(
-              '$code',
-              style: TextStyle(
-                  fontSize: 16,
-                  color: Colors.black87,
-                  fontWeight: FontWeight.bold,
-                  letterSpacing: 1),
-            ),
-            SizedBox(
-              height: 10,
-            ),
-            SizedBox(
-              width: MediaQuery.of(context).size.width - 100,
-              child: ElevatedButton(
-                style: ElevatedButton.styleFrom(backgroundColor: Colors.blue),
-                onPressed: () {},
-                child: Text(
-                  'Copy',
-                  style: TextStyle(
-                      fontSize: 16,
-                      color: Colors.black87,
-                      fontWeight: FontWeight.bold,
-                      letterSpacing: 1),
-                ),
+      body: Container(
+        width: double.infinity,
+        child: Padding(
+          padding: EdgeInsets.all(10),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              QrImageView(
+                data: code,
+                size: 150,
+                version: QrVersions.auto,
               ),
-            )
-          ],
+              Text(
+                'Please give host to check in',
+                style: TextStyle(
+                    fontSize: 16,
+                    color: Colors.black87,
+                    fontWeight: FontWeight.bold,
+                    letterSpacing: 1),
+              ),
+              SizedBox(
+                height: 10,
+              ),
+            ],
+          ),
         ),
       ),
     );

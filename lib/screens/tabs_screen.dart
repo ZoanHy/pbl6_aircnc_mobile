@@ -1,5 +1,7 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+
 import 'package:pbl6_aircnc/models/user.dart';
 import 'package:pbl6_aircnc/screens/booking_screen.dart';
 import 'package:pbl6_aircnc/screens/home_screen.dart';
@@ -32,7 +34,12 @@ class _TabsScreenState extends State<TabsScreen> {
     _pageDetails = [
       {'pageName': HomeScreen(), 'title': 'Home Screen'},
       {'pageName': WishlistScreen(), 'title': 'Wishlist Screen'},
-      {'pageName': BookingScreen(), 'title': 'Booking Screen'},
+      {
+        'pageName': BookingScreen(
+          user: user,
+        ),
+        'title': 'Booking Screen'
+      },
       {
         'pageName': ProfileScreen(
           user: user,
@@ -75,16 +82,55 @@ class _TabsScreenState extends State<TabsScreen> {
   Widget build(BuildContext context) {
     print(widget.user);
 
-    return Scaffold(
-      body: _pageDetails[_seletedPageIndex]['pageName'],
-      bottomNavigationBar: BottomNavigationBar(
-          currentIndex: _seletedPageIndex,
-          onTap: (index) {
-            setState(() {
-              _seletedPageIndex = index;
-            });
-          },
-          items: _bottomNavigationBarItems),
+    // return Scaffold(
+    //   body: _pageDetails[_seletedPageIndex]['pageName'],
+    //   bottomNavigationBar: BottomNavigationBar(
+    //       showSelectedLabels: false,
+    //       currentIndex: _seletedPageIndex,
+    //       onTap: (index) {
+    //         setState(() {
+    //           _seletedPageIndex = index;
+    //         });
+    //       },
+    //       items: _bottomNavigationBarItems),
+    // );
+
+    return CupertinoTabScaffold(
+      tabBar: CupertinoTabBar(
+        activeColor: Colors.blue,
+        items: _bottomNavigationBarItems,
+      ),
+      tabBuilder: (context, index) {
+        switch (index) {
+          case 0:
+            return CupertinoTabView(
+              builder: (context) => CupertinoPageScaffold(child: HomeScreen()),
+            );
+
+          case 1:
+            return CupertinoTabView(
+              builder: (context) =>
+                  CupertinoPageScaffold(child: WishlistScreen()),
+            );
+
+          case 2:
+            return CupertinoTabView(
+              builder: (context) => CupertinoPageScaffold(
+                  child: BookingScreen(
+                user: user,
+              )),
+            );
+
+          case 3:
+            return CupertinoTabView(
+              builder: (context) => CupertinoPageScaffold(
+                  child: ProfileScreen(
+                user: user,
+              )),
+            );
+        }
+        return Container();
+      },
     );
   }
 }

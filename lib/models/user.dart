@@ -11,7 +11,7 @@ class User extends Equatable {
   final String userName;
   final String email;
   final String fullName;
-  final dynamic avatarUrl;
+  dynamic? avatarUrl;
   final bool isHost;
 
   User({
