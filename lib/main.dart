@@ -38,15 +38,17 @@ class MyApp extends StatelessWidget {
         ),
       ],
       child: MaterialApp(
+        theme: ThemeData(primaryColor: Colors.blue, useMaterial3: false),
         debugShowCheckedModeBanner: false,
         // home: HomeScreen(),
         // home: TabsScreen(),
         // home: QrScannerScreen(),
         // home: ScannQrCodeScreen(),
         // home: BookingScreen()
-        // home: SignInScreen(),
-        home: TestApiScreen(),
+        home: SignInScreen(),
+        // home: TestApiScreen(),
         // home: ExampleApp(),
+        // home: ProfileScreen1(),
       ),
     );
   }

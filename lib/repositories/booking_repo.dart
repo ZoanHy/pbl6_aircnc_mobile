@@ -71,9 +71,8 @@ class BookingRepo {
       if (response.statusCode == 200) {
         return true;
       }
-      
-      return false;
 
+      return false;
     } catch (e) {
       log('Check in: ${e.toString()}');
       throw Exception('Not check in');

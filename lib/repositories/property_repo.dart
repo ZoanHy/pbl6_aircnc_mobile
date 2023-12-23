@@ -76,6 +76,7 @@ class PropertyRepo {
         lstProperties.add(property);
       }
 
+      print(lstProperties.length);
       return lstProperties;
     } catch (e) {
       print(e.toString());
@@ -244,12 +245,11 @@ class PropertyRepo {
 
       var response = await client.get(uri);
 
-      print(response.body);
+      var result = jsonDecode(response.body);
 
-      Property result =
-          Property.fromJson(response.body as Map<String, dynamic>);
+      Property property = Property.fromJson(result as Map<String, dynamic>);
 
-      return result;
+      return property;
     } catch (e) {
       log(e.toString());
       throw Exception('get detail property failed');

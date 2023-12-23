@@ -13,11 +13,19 @@ class _SignUpScreenState extends State<SignUpScreen> {
   bool agreePersonalData = true;
   final AuthBloc authBloc = AuthBloc();
 
-  TextEditingController fullnameController = TextEditingController();
-  TextEditingController emailController = TextEditingController();
-  TextEditingController usernameController = TextEditingController();
-  TextEditingController passwordController = TextEditingController();
-  TextEditingController confirmPasswordController = TextEditingController();
+  bool _isObscure = true;
+  bool _isObscureConfirm = true;
+
+  TextEditingController fullnameController =
+      TextEditingController(text: 'minh huy');
+  TextEditingController emailController =
+      TextEditingController(text: 'minhhuy1@gmail.com');
+  TextEditingController usernameController =
+      TextEditingController(text: 'zoanzoan1');
+  TextEditingController passwordController =
+      TextEditingController(text: '@Bcd1234');
+  TextEditingController confirmPasswordController =
+      TextEditingController(text: '@Bcd1234');
 
   @override
   Widget build(BuildContext context) {
@@ -29,6 +37,12 @@ class _SignUpScreenState extends State<SignUpScreen> {
           if (state is AuthSignUpSuccessState) {
             ScaffoldMessenger.of(context)
                 .showSnackBar(SnackBar(content: Text('Sign up success')));
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(
+                builder: (e) => SignInScreen(),
+              ),
+            );
           } else if (state is AuthSignUpFailedState) {
             ScaffoldMessenger.of(context)
                 .showSnackBar(SnackBar(content: Text('Sign up failed')));
@@ -165,7 +179,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         // password
                         TextFormField(
                           controller: passwordController,
-                          obscureText: true,
+                          obscureText: _isObscure,
                           obscuringCharacter: '*',
                           validator: (value) {
                             if (value == null || value.isEmpty) {
@@ -174,6 +188,16 @@ class _SignUpScreenState extends State<SignUpScreen> {
                             return null;
                           },
                           decoration: InputDecoration(
+                            suffixIcon: IconButton(
+                              icon: Icon(_isObscure
+                                  ? Icons.visibility
+                                  : Icons.visibility_off),
+                              onPressed: () {
+                                setState(() {
+                                  _isObscure = !_isObscure;
+                                });
+                              },
+                            ),
                             label: const Text('Password'),
                             hintText: 'Enter Password',
                             hintStyle: const TextStyle(
@@ -199,15 +223,29 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         // password
                         TextFormField(
                           controller: confirmPasswordController,
-                          obscureText: true,
+                          obscureText: _isObscureConfirm,
                           obscuringCharacter: '*',
                           validator: (value) {
                             if (value == null || value.isEmpty) {
                               return 'Please enter Password';
                             }
+                            if (value != passwordController.text) {
+                              return 'Please enter same Password';
+                            }
+
                             return null;
                           },
                           decoration: InputDecoration(
+                            suffixIcon: IconButton(
+                              icon: Icon(_isObscureConfirm
+                                  ? Icons.visibility
+                                  : Icons.visibility_off),
+                              onPressed: () {
+                                setState(() {
+                                  _isObscureConfirm = !_isObscureConfirm;
+                                });
+                              },
+                            ),
                             label: const Text('Confirm Password'),
                             hintText: 'Enter Confirm Password',
                             hintStyle: const TextStyle(
@@ -264,39 +302,27 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         SizedBox(
                           width: double.infinity,
                           child: ElevatedButton(
-                            onPressed: () {
-                              if (_formSignupKey.currentState!.validate() &&
-                                  agreePersonalData) {
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  const SnackBar(
-                                    content: Text('Processing Data'),
-                                  ),
-                                );
-                              } else if (!agreePersonalData) {
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  const SnackBar(
-                                      content: Text(
-                                          'Please agree to the processing of personal data')),
-                                );
-                              }
-                            },
-                            child: Padding(
-                              padding: const EdgeInsets.all(6.0),
-                              child: TextButton(
-                                child: Text(
-                                  'Sign up',
-                                  style: TextStyle(color: Colors.white),
-                                ),
-                                onPressed: () {
+                              onPressed: () {
+                                if (_formSignupKey.currentState!.validate() &&
+                                    agreePersonalData) {
+                                  print('hi');
                                   authBloc.add(AuthSignUp(
-                                      fullName: fullnameController.text,
-                                      email: emailController.text,
                                       username: usernameController.text,
+                                      email: emailController.text,
+                                      fullName: fullnameController.text,
                                       password: passwordController.text));
-                                },
-                              ),
-                            ),
-                          ),
+                                } else if (!agreePersonalData) {
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    const SnackBar(
+                                        content: Text(
+                                            'Please agree to the processing of personal data')),
+                                  );
+                                }
+                              },
+                              child: Padding(
+                                padding: const EdgeInsets.all(10.0),
+                                child: Text('Sign up'),
+                              )),
                         ),
                         const SizedBox(
                           height: 30.0,
@@ -361,7 +387,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                             ),
                             GestureDetector(
                               onTap: () {
-                                Navigator.push(
+                                Navigator.pushReplacement(
                                   context,
                                   MaterialPageRoute(
                                     builder: (e) => SignInScreen(),

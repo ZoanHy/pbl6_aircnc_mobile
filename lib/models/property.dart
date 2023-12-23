@@ -1,13 +1,14 @@
+// To parse this JSON data, do
+//
+//     final property = propertyFromJson(jsonString);
+
 import 'dart:convert';
 
-import 'package:equatable/equatable.dart';
+Property propertyFromJson(String str) => Property.fromJson(json.decode(str));
 
-Property PropertyFromJson(String str) =>
-    Property.fromJson(json.decode(str));
+String propertyToJson(Property data) => json.encode(data.toJson());
 
-String PropertyToJson(Property data) => json.encode(data.toJson());
-
-class Property extends Equatable {
+class Property {
   final int id;
   final String type;
   final int bedCount;
@@ -18,7 +19,7 @@ class Property extends Equatable {
   final double longitude;
   final String address;
   final String city;
-   bool isFavorite;
+  bool isFavorite;
   final int hostId;
   final String hostName;
   final double rating;
@@ -28,7 +29,7 @@ class Property extends Equatable {
   final int pricePerNight;
   final int cleaningFee;
   final List<PropertyImage> propertyImages;
-  final List<dynamic> propertyUtilities;
+  final List<PropertyUtility> propertyUtilities;
   final String status;
   final dynamic rejectionReason;
 
@@ -79,7 +80,7 @@ class Property extends Equatable {
     int? pricePerNight,
     int? cleaningFee,
     List<PropertyImage>? propertyImages,
-    List<dynamic>? propertyUtilities,
+    List<PropertyUtility>? propertyUtilities,
     String? status,
     dynamic rejectionReason,
   }) =>
@@ -131,8 +132,8 @@ class Property extends Equatable {
         cleaningFee: json["cleaningFee"],
         propertyImages: List<PropertyImage>.from(
             json["propertyImages"].map((x) => PropertyImage.fromJson(x))),
-        propertyUtilities:
-            List<dynamic>.from(json["propertyUtilities"].map((x) => x)),
+        propertyUtilities: List<PropertyUtility>.from(
+            json["propertyUtilities"].map((x) => PropertyUtility.fromJson(x))),
         status: json["status"],
         rejectionReason: json["rejectionReason"],
       );
@@ -160,38 +161,10 @@ class Property extends Equatable {
         "propertyImages":
             List<dynamic>.from(propertyImages.map((x) => x.toJson())),
         "propertyUtilities":
-            List<dynamic>.from(propertyUtilities.map((x) => x)),
+            List<dynamic>.from(propertyUtilities.map((x) => x.toJson())),
         "status": status,
         "rejectionReason": rejectionReason,
       };
-
-  @override
-  // TODO: implement props
-  List<Object?> get props => [
-        id,
-        type,
-        bedCount,
-        bathroomCount,
-        maxAdultCount,
-        maxChildCount,
-        latitude,
-        longitude,
-        address,
-        city,
-        isFavorite,
-        hostId,
-        hostName,
-        rating,
-        numberOfReviews,
-        title,
-        description,
-        pricePerNight,
-        cleaningFee,
-        propertyImages,
-        propertyUtilities,
-        status,
-        rejectionReason
-      ];
 }
 
 class PropertyImage {
@@ -225,6 +198,158 @@ class PropertyImage {
   Map<String, dynamic> toJson() => {
         "id": id,
         "url": url,
+        "propertyId": propertyId,
+      };
+}
+
+class PropertyUtility {
+  final bool isWifi;
+  final bool isTv;
+  final bool isKitchen;
+  final bool isAirConditioning;
+  final bool isLaptopFriendlyWorkspace;
+  final bool isHotWater;
+  final bool isBreakfast;
+  final bool isRoomService;
+  final bool isBar;
+  final bool isSwimmingPool;
+  final bool isGym;
+  final bool isSpa;
+  final bool isBeachFront;
+  final bool isMountainView;
+  final bool isLakeView;
+  final bool isSeaView;
+  final bool isLandmarkView;
+  final bool isWheelchairAccessible;
+  final bool isElevator;
+  final bool isSecurityCamera;
+  final bool isCamperFriendly;
+  final int propertyId;
+
+  PropertyUtility({
+    required this.isWifi,
+    required this.isTv,
+    required this.isKitchen,
+    required this.isAirConditioning,
+    required this.isLaptopFriendlyWorkspace,
+    required this.isHotWater,
+    required this.isBreakfast,
+    required this.isRoomService,
+    required this.isBar,
+    required this.isSwimmingPool,
+    required this.isGym,
+    required this.isSpa,
+    required this.isBeachFront,
+    required this.isMountainView,
+    required this.isLakeView,
+    required this.isSeaView,
+    required this.isLandmarkView,
+    required this.isWheelchairAccessible,
+    required this.isElevator,
+    required this.isSecurityCamera,
+    required this.isCamperFriendly,
+    required this.propertyId,
+  });
+
+  PropertyUtility copyWith({
+    bool? isWifi,
+    bool? isTv,
+    bool? isKitchen,
+    bool? isAirConditioning,
+    bool? isLaptopFriendlyWorkspace,
+    bool? isHotWater,
+    bool? isBreakfast,
+    bool? isRoomService,
+    bool? isBar,
+    bool? isSwimmingPool,
+    bool? isGym,
+    bool? isSpa,
+    bool? isBeachFront,
+    bool? isMountainView,
+    bool? isLakeView,
+    bool? isSeaView,
+    bool? isLandmarkView,
+    bool? isWheelchairAccessible,
+    bool? isElevator,
+    bool? isSecurityCamera,
+    bool? isCamperFriendly,
+    int? propertyId,
+  }) =>
+      PropertyUtility(
+        isWifi: isWifi ?? this.isWifi,
+        isTv: isTv ?? this.isTv,
+        isKitchen: isKitchen ?? this.isKitchen,
+        isAirConditioning: isAirConditioning ?? this.isAirConditioning,
+        isLaptopFriendlyWorkspace:
+            isLaptopFriendlyWorkspace ?? this.isLaptopFriendlyWorkspace,
+        isHotWater: isHotWater ?? this.isHotWater,
+        isBreakfast: isBreakfast ?? this.isBreakfast,
+        isRoomService: isRoomService ?? this.isRoomService,
+        isBar: isBar ?? this.isBar,
+        isSwimmingPool: isSwimmingPool ?? this.isSwimmingPool,
+        isGym: isGym ?? this.isGym,
+        isSpa: isSpa ?? this.isSpa,
+        isBeachFront: isBeachFront ?? this.isBeachFront,
+        isMountainView: isMountainView ?? this.isMountainView,
+        isLakeView: isLakeView ?? this.isLakeView,
+        isSeaView: isSeaView ?? this.isSeaView,
+        isLandmarkView: isLandmarkView ?? this.isLandmarkView,
+        isWheelchairAccessible:
+            isWheelchairAccessible ?? this.isWheelchairAccessible,
+        isElevator: isElevator ?? this.isElevator,
+        isSecurityCamera: isSecurityCamera ?? this.isSecurityCamera,
+        isCamperFriendly: isCamperFriendly ?? this.isCamperFriendly,
+        propertyId: propertyId ?? this.propertyId,
+      );
+
+  factory PropertyUtility.fromJson(Map<String, dynamic> json) =>
+      PropertyUtility(
+        isWifi: json["isWifi"],
+        isTv: json["isTv"],
+        isKitchen: json["isKitchen"],
+        isAirConditioning: json["isAirConditioning"],
+        isLaptopFriendlyWorkspace: json["isLaptopFriendlyWorkspace"],
+        isHotWater: json["isHotWater"],
+        isBreakfast: json["isBreakfast"],
+        isRoomService: json["isRoomService"],
+        isBar: json["isBar"],
+        isSwimmingPool: json["isSwimmingPool"],
+        isGym: json["isGym"],
+        isSpa: json["isSpa"],
+        isBeachFront: json["isBeachFront"],
+        isMountainView: json["isMountainView"],
+        isLakeView: json["isLakeView"],
+        isSeaView: json["isSeaView"],
+        isLandmarkView: json["isLandmarkView"],
+        isWheelchairAccessible: json["isWheelchairAccessible"],
+        isElevator: json["isElevator"],
+        isSecurityCamera: json["isSecurityCamera"],
+        isCamperFriendly: json["isCamperFriendly"],
+        propertyId: json["propertyId"],
+      );
+
+  Map<String, dynamic> toJson() => {
+        "isWifi": isWifi,
+        "isTv": isTv,
+        "isKitchen": isKitchen,
+        "isAirConditioning": isAirConditioning,
+        "isLaptopFriendlyWorkspace": isLaptopFriendlyWorkspace,
+        "isHotWater": isHotWater,
+        "isBreakfast": isBreakfast,
+        "isRoomService": isRoomService,
+        "isBar": isBar,
+        "isSwimmingPool": isSwimmingPool,
+        "isGym": isGym,
+        "isSpa": isSpa,
+        "isBeachFront": isBeachFront,
+        "isMountainView": isMountainView,
+        "isLakeView": isLakeView,
+        "isSeaView": isSeaView,
+        "isLandmarkView": isLandmarkView,
+        "isWheelchairAccessible": isWheelchairAccessible,
+        "isElevator": isElevator,
+        "isSecurityCamera": isSecurityCamera,
+        "isCamperFriendly": isCamperFriendly,
         "propertyId": propertyId,
       };
 }

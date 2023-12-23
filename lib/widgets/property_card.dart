@@ -127,6 +127,7 @@ class _PropertyCardState extends State<PropertyCard> {
                       ),
                     ),
                     Container(
+                      margin: EdgeInsets.only(left: 10),
                       child: Row(
                         children: [
                           Icon(

@@ -10,18 +10,16 @@ sealed class AuthState extends Equatable {
 
 final class AuthInitial extends AuthState {}
 
-sealed class AuthActionState extends AuthState {}
-
 class AunthenticateUninitializedState extends AuthState {}
 
 class AunthenticateInitializedState extends AuthState {}
 
-class AuthErrorState extends AuthActionState {}
+class AuthErrorState extends AuthState {}
 
-class AuthSignInActionState extends AuthActionState {
+class AuthSignInSuccessState extends AuthState {
   final User user;
 
-  AuthSignInActionState({
+  AuthSignInSuccessState({
     required this.user,
   });
 
@@ -29,8 +27,28 @@ class AuthSignInActionState extends AuthActionState {
   List<Object> get props => [user];
 }
 
+class AuthSignInStatusState extends AuthState {
+  final bool status;
+
+  AuthSignInStatusState({
+    required this.status,
+  });
+
+  @override
+  List<Object> get props => [status];
+}
+
 class AuthSignUpSuccessState extends AuthState {}
 
-class AuthSignUpFailedState extends AuthState {}
+class AuthSignUpFailedState extends AuthState {
+  final String errorMessage;
+
+  AuthSignUpFailedState({
+    required this.errorMessage,
+  });
+
+  @override
+  List<Object> get props => [errorMessage];
+}
 
 class AuthLoadingState extends AuthState {}

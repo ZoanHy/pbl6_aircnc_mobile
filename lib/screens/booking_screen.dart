@@ -52,20 +52,29 @@ class _BookingScreenState extends State<BookingScreen> {
             appBar: AppBar(title: Text('Booking')),
             body: Padding(
               padding: const EdgeInsets.all(16.0),
-              child: ListView.builder(
-                itemCount: state.bookings.length,
-                itemBuilder: (context, index) {
-                  final booking = state.bookings[index];
-                  return BookingCard(booking: booking);
+              child: RefreshIndicator(
+                onRefresh: () {
+                  return Future.delayed(
+                    Duration(seconds: 1),
+                    () {
+                      bookingBloc.add(LoadAllBookingEvent(user: widget.user));
+                    },
+                  );
                 },
+                child: ListView.builder(
+                  physics: AlwaysScrollableScrollPhysics(),
+                  itemCount: state.bookings.length,
+                  itemBuilder: (context, index) {
+                    final booking = state.bookings[index];
+                    return BookingCard(booking: booking);
+                  },
+                ),
               ),
             ),
           );
         }
 
-        return Container(
-          child: Text('error'),
-        );
+        return Container();
       },
     );
   }

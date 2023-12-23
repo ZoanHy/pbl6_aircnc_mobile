@@ -35,6 +35,7 @@ class AuthRepo {
         await storage.write(key: 'role', value: role);
         await storage.write(key: 'refresh_token', value: refreshToken);
 
+        print(user);
         return user;
       }
       return null;
@@ -50,8 +51,12 @@ class AuthRepo {
       required String email,
       required String password}) async {
     try {
+      print('hi');
       final uri = Uri.parse('https://${baseUrl}/${signUpUrl}');
-      final headers = {"Content-Type": "application/json"};
+      final headers = {
+        "Content-Type": "application/json",
+        'Accept': 'application/json',
+      };
       final body = json.encode({
         "username": username,
         "fullName": fullName,
@@ -60,10 +65,15 @@ class AuthRepo {
       });
 
       final response = await http.post(uri, headers: headers, body: body);
+      print(response.body);
       final result = jsonDecode(response.body);
 
       if (response.statusCode == 200) {
         return 'ok';
+      }
+
+      if (response.statusCode == 400) {
+        return result['Email'][0];
       }
 
       return result['detail'];

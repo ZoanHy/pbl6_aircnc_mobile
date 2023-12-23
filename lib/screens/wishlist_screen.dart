@@ -31,12 +31,23 @@ class _WishlistScreenState extends State<WishlistScreen> {
             appBar: AppBar(title: Text('Wishlist')),
             body: Padding(
               padding: const EdgeInsets.all(16.0),
-              child: ListView.builder(
-                itemCount: state.wishlistProperty.length,
-                itemBuilder: (context, index) {
-                  final property = state.wishlistProperty[index];
-                  return PropertyCard(property: property);
+              child: RefreshIndicator(
+                onRefresh: () {
+                  return Future.delayed(
+                    Duration(seconds: 1),
+                    () {
+                      wishlistBloc.add(LoadAllWishlistEvent());
+                    },
+                  );
                 },
+                child: ListView.builder(
+                  physics: AlwaysScrollableScrollPhysics(),
+                  itemCount: state.wishlistProperty.length,
+                  itemBuilder: (context, index) {
+                    final property = state.wishlistProperty[index];
+                    return PropertyCard(property: property);
+                  },
+                ),
               ),
             ),
           );

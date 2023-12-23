@@ -82,19 +82,6 @@ class _TabsScreenState extends State<TabsScreen> {
   Widget build(BuildContext context) {
     print(widget.user);
 
-    // return Scaffold(
-    //   body: _pageDetails[_seletedPageIndex]['pageName'],
-    //   bottomNavigationBar: BottomNavigationBar(
-    //       showSelectedLabels: false,
-    //       currentIndex: _seletedPageIndex,
-    //       onTap: (index) {
-    //         setState(() {
-    //           _seletedPageIndex = index;
-    //         });
-    //       },
-    //       items: _bottomNavigationBarItems),
-    // );
-
     return CupertinoTabScaffold(
       tabBar: CupertinoTabBar(
         activeColor: Colors.blue,

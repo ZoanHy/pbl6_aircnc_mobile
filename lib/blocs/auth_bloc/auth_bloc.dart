@@ -17,6 +17,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   AuthBloc() : super(AuthInitial()) {
     on<AuthAppStartedEvent>(_onAuthAppStartedEvent);
     on<AuthSignIn>(_onAuthSignIn);
+    on<AuthSignUp>(_onAuthSignUp);
     on<AuthSignOutEvent>(_onAuthSignOutEvent);
   }
 
@@ -28,17 +29,14 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   FutureOr<void> _onAuthSignIn(
       AuthSignIn event, Emitter<AuthState> emit) async {
     User? user = await AuthRepo.signIn(event.email, event.password);
+    print(user);
+
     if (user != null) {
-      emit(AuthLoadingState());
-
-      await Future.delayed(Duration(seconds: 2));
-
-      emit(AuthSignInActionState(user: user));
-      // emit(AunthenticateInitializedState(user: user));
+      emit(AuthSignInStatusState(status: true));
+      emit(AuthSignInSuccessState(user: user));
     } else {
       print('emit error');
-      emit(AunthenticateUninitializedState());
-      emit(AuthErrorState());
+      emit(AuthSignInStatusState(status: true));
     }
   }
 
@@ -47,5 +45,20 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     await AuthRepo.deleteAllTokenWhenLogout();
 
     emit(AunthenticateUninitializedState());
+  }
+
+  FutureOr<void> _onAuthSignUp(
+      AuthSignUp event, Emitter<AuthState> emit) async {
+    String result = await AuthRepo.signUp(
+        username: event.username,
+        fullName: event.fullName,
+        email: event.email,
+        password: event.password);
+
+    if (result == 'ok') {
+      emit(AuthSignUpSuccessState());
+    } else {
+      emit(AuthSignUpFailedState(errorMessage: result));
+    }
   }
 }

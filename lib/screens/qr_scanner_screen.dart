@@ -53,7 +53,6 @@ class _QrScannerScreenState extends State<QrScannerScreen> {
           }
         },
         child: Container(
-          // width: double.infinity,
           child: Column(
             children: [
               Expanded(
@@ -62,8 +61,7 @@ class _QrScannerScreenState extends State<QrScannerScreen> {
                     key: qrKey,
                     onQRViewCreated: onQRViewCamera,
                   )),
-              Expanded(
-                  child: Center(
+             Center(
                 child: result != null
                     ? ElevatedButton(
                         onPressed: () {
@@ -72,7 +70,7 @@ class _QrScannerScreenState extends State<QrScannerScreen> {
                         },
                         child: Text('Check in'))
                     : Text('Scan a code'),
-              )),
+              ),
               ElevatedButton(
                   onPressed: () {
                     Navigator.pop(context);
