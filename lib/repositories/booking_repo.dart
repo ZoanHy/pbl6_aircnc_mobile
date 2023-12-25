@@ -39,16 +39,55 @@ class BookingRepo {
 
       List result = jsonDecode(response.body)['data'];
 
+      print(result);
+
       for (int i = 0; i < result.length; i++) {
         Booking booking = Booking.fromJson(result[i] as Map<String, dynamic>);
         lstBooking.add(booking);
       }
+
+      print(lstBooking);
 
       return lstBooking;
     } catch (e) {
       log('Booking: ${e.toString()}');
       throw Exception('Not get list property');
     }
+  }
+
+  static Future<int> getTotalPages({required int guestId}) async {
+    Map<String, dynamic> queryParameters = {
+      'hostId': guestId.toString(),
+    };
+
+    try {
+      var client = http.Client();
+      final uri = Uri.https(baseUrl, '${guestUrl}/${guestId}', queryParameters);
+      var headers = {"Content-Type": "application/json"};
+      var response = await client.get(uri, headers: headers);
+
+      int totalPages = jsonDecode(response.body)['totalPages'];
+
+      return totalPages;
+    } catch (e) {
+      log('Booking: ${e.toString()}');
+      throw Exception('Error total pages booking');
+    }
+  }
+
+  static Future<List<List<Booking>>> getAllPagesBooking(
+      {required int guestId}) async {
+    int totalPages = await BookingRepo.getTotalPages(guestId: guestId);
+
+    List<List<Booking>> totalPagesBooking = [];
+
+    for (int i = 1; i <= totalPages; i++) {
+      List<Booking> lstBooking = await BookingRepo.getAllBookingOfGuest(
+          pageIndex: i, guestId: guestId);
+      totalPagesBooking.add(lstBooking);
+    }
+
+    return totalPagesBooking;
   }
 
   static Future<bool> checkIn({required String codeQr}) async {

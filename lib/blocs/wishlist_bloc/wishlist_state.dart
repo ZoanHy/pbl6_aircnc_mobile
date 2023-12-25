@@ -11,11 +11,13 @@ sealed class WishlistState extends Equatable {
 final class WishlistInitial extends WishlistState {}
 
 class LoadAllWishlistState extends WishlistState {
-  final List<Property> wishlistProperty;
+  final List<List<Property>> wishlistPropertiesPage;
   LoadAllWishlistState({
-    required this.wishlistProperty,
+    required this.wishlistPropertiesPage,
   });
 
   @override
-  List<Object> get props => [wishlistProperty];
+  List<Object> get props => [wishlistPropertiesPage];
 }
+
+class LikeOrDislikeState extends WishlistState {}

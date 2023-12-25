@@ -16,17 +16,26 @@ class PropertyBloc extends Bloc<PropertyEvent, PropertyState> {
 
   FutureOr<void> _onLoadAllPropertyEvent(
       LoadAllPropertyEvent event, Emitter<PropertyState> emit) async {
-    List<Property> lstAllProperties = await PropertyRepo.filterListProperties();
-    List<Property> wishlistProperties = await WishlistRepo.getWishlists();
+    try {
+      List<List<Property>> lstAllPageProperties =
+          await PropertyRepo.getAllPagesProperty();
+      List<Property> wishlistProperties = await WishlistRepo.getWishlists();
 
-    for (Property property in wishlistProperties) {
-      Property propertyInLstAll = lstAllProperties.firstWhere(
-        (item) => item.id == property.id,
-      );
+      for (List<Property> lstPropertiesPage in lstAllPageProperties) {
+        for (Property property in lstPropertiesPage) {
+          bool check =
+              wishlistProperties.any((element) => element.id == property.id);
 
-      propertyInLstAll.isFavorite = true;
+          if (check) {
+            property.isFavorite = true;
+          }
+        }
+      }
+
+      emit(LoadAllPropertyState(lstAllPageProperties));
+    } catch (e) {
+      // Handle exceptions or errors here
+      print('Error occurred: $e');
     }
-
-    emit(LoadAllPropertyState(lstAllProperties));
   }
 }

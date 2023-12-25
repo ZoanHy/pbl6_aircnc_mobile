@@ -8,3 +8,5 @@ sealed class PropertyEvent extends Equatable {
 }
 
 class LoadAllPropertyEvent extends PropertyEvent {}
+
+class ClickToLikeOrDislikePropertyEvent extends PropertyEvent {}

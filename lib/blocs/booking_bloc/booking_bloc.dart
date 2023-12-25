@@ -20,12 +20,10 @@ class BookingBloc extends Bloc<BookingEvent, BookingState> {
       LoadAllBookingEvent event, Emitter<BookingState> emit) async {
     User user = event.user;
 
-    List<Booking> lstBooking =
-        await BookingRepo.getAllBookingOfGuest(guestId: user.id);
+    List<List<Booking>> lstBookingPages =
+        await BookingRepo.getAllPagesBooking(guestId: user.id);
 
-    print(lstBooking);
-
-    emit(LoaddAllBookingState(bookings: lstBooking));
+    emit(LoaddAllBookingState(lstBookingPages: lstBookingPages));
   }
 
   FutureOr<void> _onClickToShowQrCodeEvent(

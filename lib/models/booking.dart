@@ -26,7 +26,7 @@ class Booking {
   final int numberOfAdults;
   final int numberOfChildren;
   final String note;
-  final String checkInCode;
+  String? checkInCode;
 
   Booking({
     required this.id,

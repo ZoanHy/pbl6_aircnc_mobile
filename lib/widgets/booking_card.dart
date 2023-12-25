@@ -155,45 +155,50 @@ class BookingCard extends StatelessWidget {
               ),
             ],
           ),
-          Padding(
-            padding: const EdgeInsets.all(10.0),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                TextButton(
-                    style: ButtonStyle(
-                        backgroundColor: MaterialStateProperty.all(Colors.red)),
-                    onPressed: () {},
-                    child: Padding(
-                      padding: const EdgeInsets.all(10.0),
-                      child: Text(
-                        "Canncel",
-                        style: TextStyle(color: Colors.white, fontSize: 16),
+          booking.status == 'Confirmed'
+              ? Padding(
+                  padding: const EdgeInsets.all(10.0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      TextButton(
+                          style: ButtonStyle(
+                              backgroundColor:
+                                  MaterialStateProperty.all(Colors.red)),
+                          onPressed: () {},
+                          child: Padding(
+                            padding: const EdgeInsets.all(10.0),
+                            child: Text(
+                              "Canncel",
+                              style:
+                                  TextStyle(color: Colors.white, fontSize: 16),
+                            ),
+                          )),
+                      TextButton(
+                          style: ButtonStyle(
+                              backgroundColor:
+                                  MaterialStateProperty.all(Colors.green)),
+                          onPressed: () {
+                            Navigator.of(context).push(MaterialPageRoute(
+                              builder: (context) => ResultQrCodeScreen(
+                                  code: '${booking.checkInCode}'),
+                            ));
+                          },
+                          child: Padding(
+                            padding: const EdgeInsets.all(10.0),
+                            child: Text(
+                              "QR Code",
+                              style:
+                                  TextStyle(color: Colors.white, fontSize: 16),
+                            ),
+                          )),
+                      SizedBox(
+                        height: 10,
                       ),
-                    )),
-                TextButton(
-                    style: ButtonStyle(
-                        backgroundColor:
-                            MaterialStateProperty.all(Colors.green)),
-                    onPressed: () {
-                      Navigator.of(context).push(MaterialPageRoute(
-                        builder: (context) =>
-                            ResultQrCodeScreen(code: '${booking.checkInCode}'),
-                      ));
-                    },
-                    child: Padding(
-                      padding: const EdgeInsets.all(10.0),
-                      child: Text(
-                        "QR Code",
-                        style: TextStyle(color: Colors.white, fontSize: 16),
-                      ),
-                    )),
-                SizedBox(
-                  height: 10,
-                ),
-              ],
-            ),
-          ),
+                    ],
+                  ),
+                )
+              : SizedBox.shrink(),
         ],
       ),
     );

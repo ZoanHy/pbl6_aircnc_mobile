@@ -1,7 +1,9 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:dots_indicator/dots_indicator.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
+import 'package:pbl6_aircnc/blocs/wishlist_bloc/wishlist_bloc.dart';
 import 'package:pbl6_aircnc/models/property.dart';
 
 // ignore: must_be_immutable
@@ -17,11 +19,21 @@ class PropertyCard extends StatefulWidget {
 class _PropertyCardState extends State<PropertyCard> {
   final controller = PageController();
   var currentPage = 0;
+  bool isFavorite = true;
+
+  final WishlistBloc wishlistBloc = WishlistBloc();
 
   @override
   void dispose() {
     controller.dispose();
     super.dispose();
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    isFavorite = widget.property.isFavorite;
   }
 
   @override
@@ -151,17 +163,32 @@ class _PropertyCardState extends State<PropertyCard> {
                       '${NumberFormat.currency(locale: 'vi_VN', symbol: 'vnd').format(widget.property.pricePerNight)}/night',
                       style: TextStyle(fontSize: 14),
                     ),
-                    IconButton(
-                        onPressed: () {},
-                        icon: widget.property.isFavorite
-                            ? Icon(
-                                Icons.favorite,
-                                color: Colors.red,
-                              )
-                            : Icon(
-                                Icons.favorite_border_outlined,
-                                color: Colors.red,
-                              ))
+                    BlocBuilder<WishlistBloc, WishlistState>(
+                      builder: (context, state) {
+                        return IconButton(
+                            onPressed: () {
+                              ScaffoldMessenger.of(context)
+                                  .showSnackBar(SnackBar(
+                                content: Text('Success'),
+                                backgroundColor: Colors.green,
+                              ));
+                              wishlistBloc.add(ClickToLikeOrDislikeEvent(
+                                  property: widget.property));
+                              setState(() {
+                                isFavorite = !isFavorite;
+                              });
+                            },
+                            icon: isFavorite
+                                ? Icon(
+                                    Icons.favorite,
+                                    color: Colors.red,
+                                  )
+                                : Icon(
+                                    Icons.favorite_border_outlined,
+                                    color: Colors.red,
+                                  ));
+                      },
+                    )
                   ],
                 ),
                 SizedBox(

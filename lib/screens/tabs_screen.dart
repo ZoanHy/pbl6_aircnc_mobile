@@ -91,7 +91,7 @@ class _TabsScreenState extends State<TabsScreen> {
         switch (index) {
           case 0:
             return CupertinoTabView(
-              builder: (context) => CupertinoPageScaffold(child: HomeScreen()),
+              builder: (context) => CupertinoPageScaffold( child: HomeScreen()),
             );
 
           case 1:

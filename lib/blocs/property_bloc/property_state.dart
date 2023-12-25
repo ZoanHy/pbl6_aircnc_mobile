@@ -10,10 +10,12 @@ sealed class PropertyState extends Equatable {
 final class PropertyInitial extends PropertyState {}
 
 class LoadAllPropertyState extends PropertyState {
-  final List<Property> properties;
+  final List<List<Property>> propertiesPage;
 
-  const LoadAllPropertyState(this.properties);
+  const LoadAllPropertyState(this.propertiesPage);
 
   @override
-  List<Object> get props => [properties];
+  List<Object> get props => [propertiesPage];
 }
+
+class LikeOrDislikePropertyState extends PropertyState {}

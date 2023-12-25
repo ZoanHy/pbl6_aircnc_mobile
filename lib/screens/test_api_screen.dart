@@ -80,13 +80,13 @@ class _TestApiScreenState extends State<TestApiScreen> {
 
   void addPropertyToWishList() async {
     print('add to wishlsit');
-    bool check = await WishlistRepo.addAPropertyToWishlists("125");
+    bool check = await WishlistRepo.addAPropertyToWishlists("25");
     print(check);
   }
 
   void removePropertyToWishList() async {
     print('remove to wishlsit');
-    bool check = await WishlistRepo.removeAPropertyToWishlists("125");
+    bool check = await WishlistRepo.removeAPropertyToWishlists("25");
     print(check);
   }
 
@@ -117,7 +117,9 @@ class _TestApiScreenState extends State<TestApiScreen> {
     // getAllBookingOfGuest();
     // print('build ${codeQr}');
 
-    getDetailProperty();
+    // getDetailProperty();
+    // addPropertyToWishList();
+    // removePropertyToWishList();
 
     return Scaffold(
       appBar: AppBar(title: Text('Test api')),

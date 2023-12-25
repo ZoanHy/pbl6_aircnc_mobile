@@ -2,7 +2,9 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:number_paginator/number_paginator.dart';
 import 'package:pbl6_aircnc/blocs/booking_bloc/booking_bloc.dart';
+import 'package:pbl6_aircnc/models/booking.dart';
 import 'package:pbl6_aircnc/models/user.dart';
 import 'package:pbl6_aircnc/screens/result_qr_code_screen.dart';
 import 'package:pbl6_aircnc/widgets/booking_card.dart';
@@ -22,6 +24,8 @@ class BookingScreen extends StatefulWidget {
 
 class _BookingScreenState extends State<BookingScreen> {
   final BookingBloc bookingBloc = BookingBloc();
+  int numberOfPages = 0;
+  int currentPage = 0;
 
   @override
   void initState() {
@@ -32,9 +36,6 @@ class _BookingScreenState extends State<BookingScreen> {
 
   @override
   Widget build(BuildContext context) {
-    print('booking screen');
-    print(widget.user);
-
     return BlocConsumer<BookingBloc, BookingState>(
       bloc: bookingBloc,
       buildWhen: (previous, current) => current is! BookingActionState,
@@ -48,29 +49,58 @@ class _BookingScreenState extends State<BookingScreen> {
       },
       builder: (context, state) {
         if (state is LoaddAllBookingState) {
+          numberOfPages = state.lstBookingPages.length;
+          var pages;
+          if (numberOfPages != 0) {
+            pages = List.generate(
+                numberOfPages,
+                (idxPage) => Padding(
+                      padding: const EdgeInsets.all(16.0),
+                      child: ListView.builder(
+                        itemCount: state.lstBookingPages[idxPage].length,
+                        itemBuilder: (context, idxItem) {
+                          List<Booking> bookings =
+                              state.lstBookingPages[idxPage];
+                          final booking = bookings[idxItem];
+                          return BookingCard(booking: booking);
+                        },
+                      ),
+                    ));
+          }
+
           return Scaffold(
-            appBar: AppBar(title: Text('Booking')),
-            body: Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: RefreshIndicator(
-                onRefresh: () {
-                  return Future.delayed(
-                    Duration(seconds: 1),
-                    () {
-                      bookingBloc.add(LoadAllBookingEvent(user: widget.user));
+            appBar: AppBar(title: Text('Wishlist')),
+            body: numberOfPages != 0
+                ? RefreshIndicator(
+                    onRefresh: () {
+                      return Future.delayed(
+                        Duration(seconds: 1),
+                        () {
+                          bookingBloc
+                              .add(LoadAllBookingEvent(user: widget.user));
+                        },
+                      );
                     },
-                  );
-                },
-                child: ListView.builder(
-                  physics: AlwaysScrollableScrollPhysics(),
-                  itemCount: state.bookings.length,
-                  itemBuilder: (context, index) {
-                    final booking = state.bookings[index];
-                    return BookingCard(booking: booking);
-                  },
-                ),
-              ),
-            ),
+                    child: Padding(
+                      padding: const EdgeInsets.only(bottom: 60),
+                      child: Column(
+                        children: [
+                          Expanded(
+                              child: Container(
+                            child: pages[currentPage],
+                          )),
+                          NumberPaginator(
+                            numberPages: numberOfPages,
+                            onPageChange: (index) {
+                              setState(() {
+                                currentPage = index;
+                              });
+                            },
+                          )
+                        ],
+                      ),
+                    ))
+                : Center(),
           );
         }
 

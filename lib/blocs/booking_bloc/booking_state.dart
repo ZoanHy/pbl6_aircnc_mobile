@@ -13,14 +13,14 @@ final class BookingInitial extends BookingState {}
 class BookingActionState extends BookingState {}
 
 class LoaddAllBookingState extends BookingState {
-  final List<Booking> bookings;
+  final List<List<Booking>> lstBookingPages;
 
   LoaddAllBookingState({
-    required this.bookings,
+    required this.lstBookingPages,
   });
 
   @override
-  List<Object> get props => [bookings];
+  List<Object> get props => [lstBookingPages];
 }
 
 class NavigateToQrCodeState extends BookingActionState {

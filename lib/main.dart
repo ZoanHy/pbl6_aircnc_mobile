@@ -11,7 +11,9 @@ import 'package:pbl6_aircnc/screens/qr_scanner_screen.dart';
 import 'package:pbl6_aircnc/screens/result_qr_code_screen.dart';
 import 'package:pbl6_aircnc/screens/sign_in_screen.dart';
 import 'package:pbl6_aircnc/screens/tabs_screen.dart';
+import 'package:pbl6_aircnc/screens/test/demo_number_pagination.dart';
 import 'package:pbl6_aircnc/screens/test_api_screen.dart';
+import 'package:pbl6_aircnc/screens/wishlist_screen.dart';
 
 void main() {
   runApp(const MyApp());
@@ -48,7 +50,8 @@ class MyApp extends StatelessWidget {
         home: SignInScreen(),
         // home: TestApiScreen(),
         // home: ExampleApp(),
-        // home: ProfileScreen1(),
+        // home: DemoNumberPaginiation(),
+        // home: WishlistScreen(),
       ),
     );
   }

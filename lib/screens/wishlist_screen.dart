@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:number_paginator/number_paginator.dart';
 import 'package:pbl6_aircnc/blocs/auth_bloc/auth_bloc.dart';
 import 'package:pbl6_aircnc/blocs/property_bloc/property_bloc.dart';
 import 'package:pbl6_aircnc/blocs/wishlist_bloc/wishlist_bloc.dart';
+import 'package:pbl6_aircnc/models/property.dart';
 import 'package:pbl6_aircnc/widgets/property_card.dart';
 
 class WishlistScreen extends StatefulWidget {
@@ -14,6 +16,8 @@ class WishlistScreen extends StatefulWidget {
 
 class _WishlistScreenState extends State<WishlistScreen> {
   final WishlistBloc wishlistBloc = WishlistBloc();
+  int numberOfPages = 0;
+  int currentPage = 0;
 
   @override
   void initState() {
@@ -27,29 +31,57 @@ class _WishlistScreenState extends State<WishlistScreen> {
       bloc: wishlistBloc,
       builder: (context, state) {
         if (state is LoadAllWishlistState) {
+          numberOfPages = state.wishlistPropertiesPage.length;
+          var pages;
+          if (numberOfPages != 0) {
+            pages = List.generate(
+                numberOfPages,
+                (idxPage) => Padding(
+                      padding: const EdgeInsets.all(16.0),
+                      child: ListView.builder(
+                        itemCount: state.wishlistPropertiesPage[idxPage].length,
+                        itemBuilder: (context, idxItem) {
+                          List<Property> properties =
+                              state.wishlistPropertiesPage[idxPage];
+                          final property = properties[idxItem];
+                          return PropertyCard(property: property);
+                        },
+                      ),
+                    ));
+          }
+
           return Scaffold(
             appBar: AppBar(title: Text('Wishlist')),
-            body: Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: RefreshIndicator(
-                onRefresh: () {
-                  return Future.delayed(
-                    Duration(seconds: 1),
-                    () {
-                      wishlistBloc.add(LoadAllWishlistEvent());
+            body: numberOfPages != 0
+                ? RefreshIndicator(
+                    onRefresh: () {
+                      return Future.delayed(
+                        Duration(seconds: 1),
+                        () {
+                          wishlistBloc.add(LoadAllWishlistEvent());
+                        },
+                      );
                     },
-                  );
-                },
-                child: ListView.builder(
-                  physics: AlwaysScrollableScrollPhysics(),
-                  itemCount: state.wishlistProperty.length,
-                  itemBuilder: (context, index) {
-                    final property = state.wishlistProperty[index];
-                    return PropertyCard(property: property);
-                  },
-                ),
-              ),
-            ),
+                    child: Padding(
+                      padding: const EdgeInsets.only(bottom: 60),
+                      child: Column(
+                        children: [
+                          Expanded(
+                              child: Container(
+                            child: pages[currentPage],
+                          )),
+                          NumberPaginator(
+                            numberPages: numberOfPages,
+                            onPageChange: (index) {
+                              setState(() {
+                                currentPage = index;
+                              });
+                            },
+                          )
+                        ],
+                      ),
+                    ))
+                : Center(),
           );
         }
         return Container();

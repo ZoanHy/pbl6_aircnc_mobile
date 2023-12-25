@@ -76,7 +76,6 @@ class PropertyRepo {
         lstProperties.add(property);
       }
 
-      print(lstProperties.length);
       return lstProperties;
     } catch (e) {
       print(e.toString());
@@ -158,6 +157,36 @@ class PropertyRepo {
       print(e.toString());
       throw Exception('Not get list property');
     }
+  }
+
+  static Future<int> getTotalPages() async {
+    try {
+      var client = http.Client();
+      final uri = Uri.parse('https://${baseUrl}/${propertyUrl}');
+      var headers = {"Content-Type": "application/json"};
+      var response = await client.get(uri, headers: headers);
+
+      int totalPages = jsonDecode(response.body)['totalPages'];
+
+      return totalPages;
+    } catch (e) {
+      print(e.toString());
+      throw Exception('Error total pages');
+    }
+  }
+
+  static Future<List<List<Property>>> getAllPagesProperty() async {
+    int totalPages = await PropertyRepo.getTotalPages();
+
+    List<List<Property>> totalPagesProperty = [];
+
+    for (int i = 1; i <= totalPages; i++) {
+      List<Property> lstPropertites =
+          await PropertyRepo.filterListProperties(pageIndex: i);
+      totalPagesProperty.add(lstPropertites);
+    }
+
+    return totalPagesProperty;
   }
 
   static Future<bool> postAProperty() async {
