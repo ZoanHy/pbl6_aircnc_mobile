@@ -9,6 +9,7 @@ class BookingRepo {
   static String baseUrl = 'pbl6.whitemage.tech';
   static var guestUrl = 'api/bookings/guest';
   static var checkInUrl = 'api/check-in';
+  static var postBooking = 'api/bookings';
   static final FlutterSecureStorage storage = const FlutterSecureStorage();
 
   static Future<List<Booking>> getAllBookingOfGuest(
@@ -39,14 +40,10 @@ class BookingRepo {
 
       List result = jsonDecode(response.body)['data'];
 
-      print(result);
-
       for (int i = 0; i < result.length; i++) {
         Booking booking = Booking.fromJson(result[i] as Map<String, dynamic>);
         lstBooking.add(booking);
       }
-
-      print(lstBooking);
 
       return lstBooking;
     } catch (e) {
@@ -115,6 +112,43 @@ class BookingRepo {
     } catch (e) {
       log('Check in: ${e.toString()}');
       throw Exception('Not check in');
+    }
+  }
+
+  static Future<bool> orderBooking(
+      int propertyId,
+      DateTime checkInDate,
+      DateTime checkOutDate,
+      int numberOfAdults,
+      int numberOfChildren,
+      String note) async {
+    final body = json.encode({
+      "propertyId": propertyId.toString(),
+      "checkInDate": checkInDate.toIso8601String(),
+      "checkOutDate": checkOutDate.toIso8601String(),
+      "numberOfAdults": numberOfAdults.toString(),
+      "numberOfChildren": numberOfChildren.toString(),
+      "note": note.toString()
+    });
+
+    String? token = await storage.read(key: 'accessToken');
+    try {
+      var client = http.Client();
+      final uri = Uri.parse('https://${baseUrl}/${postBooking}');
+      var headers = {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+        'Authorization': 'Bearer $token',
+      };
+      var response = await client.post(uri, headers: headers, body: body);
+      print(response.body);
+      if (response.statusCode == 200) {
+        return true;
+      }
+      return false;
+    } catch (e) {
+      log(e.toString());
+      throw Exception('error post booking');
     }
   }
 }

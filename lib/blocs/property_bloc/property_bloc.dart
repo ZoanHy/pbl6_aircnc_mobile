@@ -12,6 +12,7 @@ part 'property_state.dart';
 class PropertyBloc extends Bloc<PropertyEvent, PropertyState> {
   PropertyBloc() : super(PropertyInitial()) {
     on<LoadAllPropertyEvent>(_onLoadAllPropertyEvent);
+    on<LoadAllDetailPropertyEvent>(_onLoadAllDetailPropertyEvent);
   }
 
   FutureOr<void> _onLoadAllPropertyEvent(
@@ -31,11 +32,20 @@ class PropertyBloc extends Bloc<PropertyEvent, PropertyState> {
           }
         }
       }
-
+      emit(LoadingHomePageState());
+      await Future.delayed(Duration(seconds: 2));
       emit(LoadAllPropertyState(lstAllPageProperties));
     } catch (e) {
       // Handle exceptions or errors here
       print('Error occurred: $e');
     }
+  }
+
+  FutureOr<void> _onLoadAllDetailPropertyEvent(
+      LoadAllDetailPropertyEvent event, Emitter<PropertyState> emit) async {
+    Property detailProperty =
+        await PropertyRepo.getPropertyDetail(propertyId: event.propertyId);
+
+    emit(LoadAllDetailPropertyState(detailProperty: detailProperty));
   }
 }

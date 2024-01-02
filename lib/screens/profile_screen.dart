@@ -6,7 +6,10 @@ import 'package:icons_plus/icons_plus.dart';
 import 'package:pbl6_aircnc/blocs/auth_bloc/auth_bloc.dart';
 
 import 'package:pbl6_aircnc/models/user.dart';
+import 'package:pbl6_aircnc/models/user_detail.dart';
+import 'package:pbl6_aircnc/screens/edit_profile_screen.dart';
 import 'package:pbl6_aircnc/screens/qr_scanner_screen.dart';
+import 'package:pbl6_aircnc/screens/sign_in_screen.dart';
 
 // ignore: must_be_immutable
 class ProfileScreen extends StatefulWidget {
@@ -21,48 +24,88 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
+  final AuthBloc authBloc = AuthBloc();
+
+  @override
+  void initState() {
+    // TODO: implement initState
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        centerTitle: true,
-        title: const Text('Profile'),
-        actions: [
-          IconButton(onPressed: () {}, icon: Icon(Icons.logout_rounded))
-        ],
-      ),
-      body: BlocListener<AuthBloc, AuthState>(
-        listener: (context, state) {
-          // TODO: implement listener
-        },
-        child: SingleChildScrollView(
+    print('profile screen');
+
+    return BlocListener<AuthBloc, AuthState>(
+      bloc: authBloc,
+      listener: (context, state) {
+        // TODO: implement listener
+        if (state is AunthenticateUninitializedState) {
+          Navigator.of(context, rootNavigator: true).push(MaterialPageRoute(
+            builder: (context) => SignInScreen(),
+          ));
+        }
+        
+      },
+      child: Scaffold(
+        appBar: AppBar(
+          centerTitle: true,
+          title: const Text('Profile'),
+          actions: [
+            IconButton(
+                onPressed: () {
+                  print('sign out');
+                  authBloc.add(AuthSignOutEvent());
+                },
+                icon: Icon(Icons.logout_rounded))
+          ],
+        ),
+        body: SingleChildScrollView(
             child: Center(
           child: Container(
             padding: EdgeInsets.all(20),
             child: Column(
               children: [
-                SizedBox(
-                  width: 120,
-                  height: 120,
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.circular(100),
-                    child: widget.user.avatarUrl != null
-                        ? CachedNetworkImage(
-                            imageUrl: widget.user.avatarUrl,
-                            fit: BoxFit.cover,
-                            errorWidget: (context, error, stackTrace) {
-                              return Image(
-                                image: AssetImage(
-                                    "assets/images/image_not_found.jpg"),
-                                fit: BoxFit.scaleDown,
-                              );
-                            },
-                          )
-                        : Text(
-                            '${widget.user.fullName[0].toUpperCase()}',
-                            style: TextStyle(fontSize: 20),
-                          ),
-                  ),
+                Stack(
+                  children: [
+                    SizedBox(
+                      width: 120,
+                      height: 120,
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(100),
+                        child: widget.user.avatarUrl != null
+                            ? CachedNetworkImage(
+                                imageUrl: widget.user.avatarUrl,
+                                fit: BoxFit.cover,
+                                errorWidget: (context, error, stackTrace) {
+                                  return Image(
+                                    image: AssetImage(
+                                        "assets/images/image_not_found.jpg"),
+                                    fit: BoxFit.scaleDown,
+                                  );
+                                },
+                              )
+                            : Text(
+                                '${widget.user.fullName[0].toUpperCase()}',
+                                style: TextStyle(fontSize: 20),
+                              ),
+                      ),
+                    ),
+                    Positioned(
+                      bottom: 0,
+                      right: 0,
+                      child: Container(
+                        width: 35,
+                        height: 35,
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(100)),
+                        child: Icon(
+                          LineAwesome.pencil_alt_solid,
+                          color: Colors.white,
+                          size: 20,
+                        ),
+                      ),
+                    )
+                  ],
                 ),
                 SizedBox(
                   height: 10,
@@ -82,16 +125,23 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   width: 200,
                   child: ElevatedButton(
                     style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.yellowAccent.shade400,
+                        backgroundColor: Colors.blue,
                         side: BorderSide.none,
                         shape: StadiumBorder()),
-                    onPressed: () {},
+                    onPressed: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) =>
+                                EditProfileScreen(userId: widget.user.id),
+                          ));
+                    },
                     child: Padding(
                       padding: const EdgeInsets.all(15.0),
                       child: Text(
                         'Edit Profile',
                         style: TextStyle(
-                            color: Colors.black87, fontWeight: FontWeight.bold),
+                            color: Colors.white, fontWeight: FontWeight.bold),
                       ),
                     ),
                   ),

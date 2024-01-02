@@ -264,11 +264,8 @@ class PropertyRepo {
   static Future<Property> getPropertyDetail({required int propertyId}) async {
     final queryParameters = {'propertyId': propertyId.toString()};
 
-    print('hi');
-
     try {
       var client = http.Client();
-      print('hi 1');
       final uri =
           Uri.https(baseUrl, '${propertyUrl}/${propertyId}', queryParameters);
 

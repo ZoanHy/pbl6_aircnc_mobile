@@ -5,6 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:pbl6_aircnc/blocs/wishlist_bloc/wishlist_bloc.dart';
 import 'package:pbl6_aircnc/models/property.dart';
+import 'package:pbl6_aircnc/screens/property_detail_screen.dart';
 
 // ignore: must_be_immutable
 class PropertyCard extends StatefulWidget {
@@ -20,6 +21,7 @@ class _PropertyCardState extends State<PropertyCard> {
   final controller = PageController();
   var currentPage = 0;
   bool isFavorite = true;
+  bool isHover = false;
 
   final WishlistBloc wishlistBloc = WishlistBloc();
 
@@ -58,38 +60,36 @@ class _PropertyCardState extends State<PropertyCard> {
         children: [
           Stack(
             children: [
-              //  padding: const EdgeInsets.all(15.0),
-              Padding(
-                padding: const EdgeInsets.all(10.0),
-                child: Container(
-                  clipBehavior: Clip.antiAlias,
-                  width: size.width,
-                  height: size.width - 100,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(16.0),
-                  ),
-                  child: PageView(
-                    controller: controller,
-                    onPageChanged: (value) {
-                      setState(() {
-                        currentPage = value;
-                      });
-                    },
-                    children: widget.property.propertyImages.map((items) {
-                      var imageUrl = items.url;
-                      return CachedNetworkImage(
-                        imageUrl: imageUrl,
-                        fit: BoxFit.cover,
-                        errorWidget: (context, error, stackTrace) {
-                          return Image(
-                            image:
-                                AssetImage("assets/images/image_not_found.jpg"),
-                            fit: BoxFit.scaleDown,
-                          );
-                        },
-                      );
-                    }).toList(),
-                  ),
+              Container(
+                clipBehavior: Clip.antiAlias,
+                width: size.width,
+                height: size.width - 50,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(16),
+                      topRight: Radius.circular(16)),
+                ),
+                child: PageView(
+                  controller: controller,
+                  onPageChanged: (value) {
+                    setState(() {
+                      currentPage = value;
+                    });
+                  },
+                  children: widget.property.propertyImages.map((items) {
+                    var imageUrl = items.url;
+                    return CachedNetworkImage(
+                      imageUrl: imageUrl,
+                      fit: BoxFit.cover,
+                      errorWidget: (context, error, stackTrace) {
+                        return Image(
+                          image:
+                              AssetImage("assets/images/image_not_found.jpg"),
+                          fit: BoxFit.cover,
+                        );
+                      },
+                    );
+                  }).toList(),
                 ),
               ),
               Positioned(
@@ -117,6 +117,36 @@ class _PropertyCardState extends State<PropertyCard> {
                   ),
                 ),
               ),
+              Positioned(
+                  top: 20,
+                  right: 20,
+                  child: BlocBuilder<WishlistBloc, WishlistState>(
+                    builder: (context, state) {
+                      return IconButton(
+                          onPressed: () {
+                            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                              content: Text('Success'),
+                              backgroundColor: Colors.green,
+                            ));
+                            wishlistBloc.add(ClickToLikeOrDislikeEvent(
+                                property: widget.property));
+                            setState(() {
+                              isFavorite = !isFavorite;
+                            });
+                          },
+                          icon: isFavorite
+                              ? Icon(
+                                  Icons.favorite,
+                                  color: Colors.red,
+                                  size: 30,
+                                )
+                              : Icon(
+                                  Icons.favorite_border_outlined,
+                                  color: Colors.red,
+                                  size: 30,
+                                ));
+                    },
+                  ))
             ],
           ),
           Padding(
@@ -129,12 +159,30 @@ class _PropertyCardState extends State<PropertyCard> {
                   children: [
                     Container(
                       child: Expanded(
-                        child: Text(
-                          '${widget.property.title}',
-                          style: TextStyle(
-                              fontWeight: FontWeight.bold, fontSize: 16),
-                          overflow: TextOverflow.ellipsis,
-                          maxLines: 3,
+                        child: InkWell(
+                          onHover: (value) {
+                            print(value);
+                            setState(() {
+                              isHover = value;
+                            });
+                          },
+                          onTap: () {
+                            Navigator.of(context, rootNavigator: true)
+                                .push(MaterialPageRoute(
+                              builder: (context) => PropertyDetailScreen(
+                                propertyId: widget.property.id,
+                              ),
+                            ));
+                          },
+                          child: Text(
+                            '${widget.property.title}',
+                            style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 20,
+                                color: isHover ? Colors.blue : Colors.black),
+                            overflow: TextOverflow.ellipsis,
+                            maxLines: 3,
+                          ),
                         ),
                       ),
                     ),
@@ -144,10 +192,17 @@ class _PropertyCardState extends State<PropertyCard> {
                         children: [
                           Icon(
                             Icons.star,
-                            color: Colors.yellow,
+                            color: Color.fromRGBO(254, 178, 7, 5),
+                            size: 20,
+                          ),
+                          const SizedBox(
+                            width: 5,
                           ),
                           Text(
-                              '${(widget.property.rating as double).toStringAsFixed(2)}')
+                            '${(widget.property.rating).toStringAsFixed(2)}',
+                            style: TextStyle(
+                                fontSize: 16, fontWeight: FontWeight.bold),
+                          )
                         ],
                       ),
                     )
@@ -156,38 +211,25 @@ class _PropertyCardState extends State<PropertyCard> {
                 SizedBox(
                   height: 10,
                 ),
+                Text(widget.property.city,
+                    style: const TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w400,
+                        color: Colors.grey)),
+                SizedBox(
+                  height: 10,
+                ),
                 Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
                     Text(
-                      '${NumberFormat.currency(locale: 'vi_VN', symbol: 'vnd').format(widget.property.pricePerNight)}/night',
-                      style: TextStyle(fontSize: 14),
+                      '${NumberFormat.currency(locale: 'vi_VN').format(widget.property.pricePerNight)} / ',
+                      style:
+                          TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                     ),
-                    BlocBuilder<WishlistBloc, WishlistState>(
-                      builder: (context, state) {
-                        return IconButton(
-                            onPressed: () {
-                              ScaffoldMessenger.of(context)
-                                  .showSnackBar(SnackBar(
-                                content: Text('Success'),
-                                backgroundColor: Colors.green,
-                              ));
-                              wishlistBloc.add(ClickToLikeOrDislikeEvent(
-                                  property: widget.property));
-                              setState(() {
-                                isFavorite = !isFavorite;
-                              });
-                            },
-                            icon: isFavorite
-                                ? Icon(
-                                    Icons.favorite,
-                                    color: Colors.red,
-                                  )
-                                : Icon(
-                                    Icons.favorite_border_outlined,
-                                    color: Colors.red,
-                                  ));
-                      },
+                    Text(
+                      'night',
+                      style:
+                          TextStyle(fontSize: 16, fontWeight: FontWeight.w400),
                     )
                   ],
                 ),

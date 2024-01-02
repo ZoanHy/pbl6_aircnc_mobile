@@ -9,29 +9,29 @@ Property propertyFromJson(String str) => Property.fromJson(json.decode(str));
 String propertyToJson(Property data) => json.encode(data.toJson());
 
 class Property {
-  final int id;
-  final String type;
-  final int bedCount;
-  final int bathroomCount;
-  final int maxAdultCount;
-  final int maxChildCount;
-  final double latitude;
-  final double longitude;
-  final String address;
-  final String city;
+  int id;
+  String? type;
+  int? bedCount;
+  int? bathroomCount;
+  int? maxAdultCount;
+  int? maxChildCount;
+  double? latitude;
+  double? longitude;
+  String? address;
+  String city;
   bool isFavorite;
-  final int hostId;
-  final String hostName;
-  final double rating;
-  final int numberOfReviews;
-  final String title;
-  final String description;
-  final int pricePerNight;
-  final int cleaningFee;
-  final List<PropertyImage> propertyImages;
-  final List<PropertyUtility> propertyUtilities;
-  final String status;
-  final dynamic rejectionReason;
+  int hostId;
+  String? hostName;
+  double rating;
+  int? numberOfReviews;
+  String? title;
+  String? description;
+  int pricePerNight;
+  int cleaningFee;
+  List<PropertyImage> propertyImages;
+  List<PropertyUtility> propertyUtilities;
+  String? status;
+  dynamic rejectionReason;
 
   Property({
     required this.id,

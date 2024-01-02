@@ -31,6 +31,7 @@ class _BookingScreenState extends State<BookingScreen> {
   void initState() {
     // TODO: implement initState
     super.initState();
+    
     bookingBloc.add(LoadAllBookingEvent(user: widget.user));
   }
 
@@ -42,7 +43,7 @@ class _BookingScreenState extends State<BookingScreen> {
       listenWhen: (previous, current) => current is BookingActionState,
       listener: (context, state) {
         if (state is NavigateToQrCodeState) {
-          Navigator.of(context).push(MaterialPageRoute(
+          Navigator.of(context, rootNavigator: true).push(MaterialPageRoute(
             builder: (context) => ResultQrCodeScreen(code: state.code),
           ));
         }
@@ -62,6 +63,7 @@ class _BookingScreenState extends State<BookingScreen> {
                           List<Booking> bookings =
                               state.lstBookingPages[idxPage];
                           final booking = bookings[idxItem];
+                          
                           return BookingCard(booking: booking);
                         },
                       ),
@@ -69,7 +71,7 @@ class _BookingScreenState extends State<BookingScreen> {
           }
 
           return Scaffold(
-            appBar: AppBar(title: Text('Wishlist')),
+            appBar: AppBar(title: Text('Booking')),
             body: numberOfPages != 0
                 ? RefreshIndicator(
                     onRefresh: () {

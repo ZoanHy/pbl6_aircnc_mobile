@@ -73,6 +73,7 @@ class _TestApiScreenState extends State<TestApiScreen> {
   }
 
   void postProperties() async {
+    signIn();
     print('hi');
     bool check = await PropertyRepo.postAProperty();
     print(check);
@@ -104,6 +105,18 @@ class _TestApiScreenState extends State<TestApiScreen> {
     print(detail);
   }
 
+  void postABooking() async {
+    signIn();
+    DateTime startDate = DateTime.now().add(Duration(days: 3));
+
+    DateTime endDate = DateTime.now().add(Duration(days: 5));
+
+    bool check = await BookingRepo.orderBooking(
+        1, startDate, endDate, 1, 1, 'co giam gia khong');
+
+    print(check);
+  }
+
   @override
   Widget build(BuildContext context) {
     // filterPropertiesOfHost();
@@ -116,7 +129,7 @@ class _TestApiScreenState extends State<TestApiScreen> {
     // removePropertyToWishList();
     // getAllBookingOfGuest();
     // print('build ${codeQr}');
-
+    // postABooking();
     // getDetailProperty();
     // addPropertyToWishList();
     // removePropertyToWishList();

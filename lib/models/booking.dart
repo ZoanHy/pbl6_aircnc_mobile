@@ -9,23 +9,23 @@ Booking bookingFromJson(String str) => Booking.fromJson(json.decode(str));
 String bookingToJson(Booking data) => json.encode(data.toJson());
 
 class Booking {
-  final int id;
-  final int propertyId;
-  final String propertyName;
-  final int hostId;
-  final String hostName;
-  final String hostEmail;
+  int id;
+  int propertyId;
+  String? propertyName;
+  int? hostId;
+  String? hostName;
+  String? hostEmail;
   String? hostPhoneNumber;
-  final String status;
-  final DateTime checkInDate;
-  final DateTime checkOutDate;
-  final int numberOfDays;
-  final int pricePerNight;
-  final int cleaningFee;
-  final int totalPrice;
-  final int numberOfAdults;
-  final int numberOfChildren;
-  final String note;
+  String? status;
+  DateTime checkInDate;
+  DateTime checkOutDate;
+  int? numberOfDays;
+  int? pricePerNight;
+  int? cleaningFee;
+  int? totalPrice;
+  int? numberOfAdults;
+  int? numberOfChildren;
+  String? note;
   String? checkInCode;
 
   Booking({

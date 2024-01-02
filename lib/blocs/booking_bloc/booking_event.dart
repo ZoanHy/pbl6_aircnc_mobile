@@ -40,3 +40,21 @@ class CheckInBookingEvent extends BookingEvent {
   @override
   List<Object> get props => [code];
 }
+
+class OrderBookingEvent extends BookingEvent {
+  final int propertyId;
+  final DateTime checkInDate;
+  final DateTime checkOutDate;
+  final int numberOfAdults;
+  final int numberOfChildren;
+  final String note;
+  
+  OrderBookingEvent({
+    required this.propertyId,
+    required this.checkInDate,
+    required this.checkOutDate,
+    required this.numberOfAdults,
+    required this.numberOfChildren,
+    required this.note,
+  });
+}

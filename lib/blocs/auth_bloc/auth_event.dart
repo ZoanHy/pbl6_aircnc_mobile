@@ -1,3 +1,4 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 part of 'auth_bloc.dart';
 
 sealed class AuthEvent extends Equatable {
@@ -8,6 +9,15 @@ sealed class AuthEvent extends Equatable {
 }
 
 class AuthAppStartedEvent extends AuthEvent {}
+
+class AuthInitEvent extends AuthEvent {
+  final User user;
+  AuthInitEvent({
+    required this.user,
+  });
+
+  
+}
 
 class AuthSignIn extends AuthEvent {
   final String email;
@@ -34,6 +44,5 @@ class AuthSignUp extends AuthEvent {
   @override
   List<Object> get props => [fullName, email, username, password];
 }
-
 
 class AuthSignOutEvent extends AuthEvent {}

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:loader_overlay/loader_overlay.dart';
 import 'package:number_paginator/number_paginator.dart';
 import 'package:pbl6_aircnc/blocs/auth_bloc/auth_bloc.dart';
 import 'package:pbl6_aircnc/blocs/property_bloc/property_bloc.dart';
@@ -26,10 +27,22 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<PropertyBloc, PropertyState>(
+    return BlocConsumer<PropertyBloc, PropertyState>(
       bloc: propertyBloc,
+      buildWhen: (previous, current) => current is! PropertyActionState,
+      listenWhen: (previous, current) => current is PropertyActionState,
+      listener: (context, state) {},
       builder: (context, state) {
+        if (state is LoadingHomePageState) {
+          return Scaffold(
+            body: Center(
+              child: CircularProgressIndicator(),
+            ),
+          );
+        }
         if (state is LoadAllPropertyState) {
+          context.loaderOverlay.hide();
+
           numberOfPages = state.propertiesPage.length;
           var pages;
           if (numberOfPages != 0) {
@@ -50,7 +63,7 @@ class _HomeScreenState extends State<HomeScreen> {
           }
 
           return Scaffold(
-            appBar: AppBar(title: Text('Wishlist')),
+            appBar: AppBar(title: Text('Home')),
             body: numberOfPages != 0
                 ? RefreshIndicator(
                     onRefresh: () {

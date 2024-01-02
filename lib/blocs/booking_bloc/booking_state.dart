@@ -14,9 +14,11 @@ class BookingActionState extends BookingState {}
 
 class LoaddAllBookingState extends BookingState {
   final List<List<Booking>> lstBookingPages;
+  final List<List<Property>> lstProperties;
 
   LoaddAllBookingState({
     required this.lstBookingPages,
+    required this.lstProperties,
   });
 
   @override
@@ -37,3 +39,5 @@ class NavigateToQrCodeState extends BookingActionState {
 class ScanCodeQrSuccessAndReturnProfileState extends BookingActionState {}
 
 class ScanCodeQrFailedState extends BookingActionState {}
+
+class OrderBookingSuccessState extends BookingActionState {}

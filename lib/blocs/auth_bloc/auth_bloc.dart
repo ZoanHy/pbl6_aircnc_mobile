@@ -19,6 +19,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     on<AuthSignIn>(_onAuthSignIn);
     on<AuthSignUp>(_onAuthSignUp);
     on<AuthSignOutEvent>(_onAuthSignOutEvent);
+    on<AuthInitEvent>(_onAuthInitEvent);
   }
 
   FutureOr<void> _onAuthAppStartedEvent(
@@ -32,8 +33,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     print(user);
 
     if (user != null) {
-      emit(AuthSignInStatusState(status: true));
-      emit(AuthSignInSuccessState(user: user));
+      emit(AunthenticateInitializedState(user: user));
     } else {
       print('emit error');
       emit(AuthSignInStatusState(status: true));
@@ -60,5 +60,12 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     } else {
       emit(AuthSignUpFailedState(errorMessage: result));
     }
+  }
+
+  FutureOr<void> _onAuthInitEvent(
+      AuthInitEvent event, Emitter<AuthState> emit) async {
+    emit(LoadingTabsPageState());
+    await Future.delayed(Duration(seconds: 2));
+    emit(AunthenticateInitializedState(user: event.user));
   }
 }

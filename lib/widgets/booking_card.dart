@@ -1,12 +1,16 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
+import 'package:pbl6_aircnc/blocs/property_bloc/property_bloc.dart';
 
 import 'package:pbl6_aircnc/models/booking.dart';
+import 'package:pbl6_aircnc/screens/payment_screen.dart';
+import 'package:pbl6_aircnc/screens/property_detail_screen.dart';
 import 'package:pbl6_aircnc/screens/result_qr_code_screen.dart';
 
-class BookingCard extends StatelessWidget {
+class BookingCard extends StatefulWidget {
   final Booking booking;
 
   const BookingCard({
@@ -15,13 +19,44 @@ class BookingCard extends StatelessWidget {
   }) : super(key: key);
 
   @override
+  State<BookingCard> createState() => _BookingCardState();
+}
+
+class _BookingCardState extends State<BookingCard> {
+  String formatDateFunc(DateTime date) {
+    return DateFormat('dd/MM/yyyy').format(date);
+  }
+
+  final PropertyBloc propertyBloc = PropertyBloc();
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    propertyBloc
+        .add(LoadAllDetailPropertyEvent(propertyId: widget.booking.propertyId));
+  }
+
+  @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
     final colorScheme = Theme.of(context).colorScheme;
 
+    Color switchColorByBookingStatus(String status) {
+      if (status == 'Pending') {
+        return Color.fromRGBO(254, 178, 7, 5);
+      } else if (status == 'Confirmed') {
+        return Colors.green;
+      } else if (status == 'CheckedIn') {
+        return Colors.purple;
+      }
+
+      return Colors.black;
+    }
+
     return Container(
       alignment: Alignment.center,
-      margin: EdgeInsets.fromLTRB(20, 20, 20, 20),
+      margin: EdgeInsets.fromLTRB(10, 20, 10, 20),
       decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(15),
@@ -33,36 +68,46 @@ class BookingCard extends StatelessWidget {
             )
           ]),
       child: Column(
-        // mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Stack(
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.all(10.0),
-                    child: Container(
-                        clipBehavior: Clip.antiAlias,
-                        width: size.width,
-                        height: size.width - 100,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(16.0),
-                        ),
-                        child: CachedNetworkImage(
-                          imageUrl:
-                              'https://a0.muscache.com/im/pictures/3efc49b7-d1e6-4267-87ef-3e42b96e81bd.jpg?im_w=720',
-                          fit: BoxFit.cover,
-                          errorWidget: (context, error, stackTrace) {
-                            return Image(
-                              image: AssetImage(
-                                  "assets/images/image_not_found.jpg"),
-                              fit: BoxFit.scaleDown,
-                            );
-                          },
-                        )),
-                  )
-                ],
+              BlocBuilder<PropertyBloc, PropertyState>(
+                bloc: propertyBloc,
+                builder: (context, state) {
+                  if (state is LoadAllDetailPropertyState) {
+                    print('load image property detail');
+                    print(state.detailProperty.propertyImages[0].url);
+                    return Stack(
+                      children: [
+                        Container(
+                            clipBehavior: Clip.antiAlias,
+                            width: size.width,
+                            height: size.width - 50,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.only(
+                                  topLeft: Radius.circular(16),
+                                  topRight: Radius.circular(16)),
+                            ),
+                            child: CachedNetworkImage(
+                              imageUrl: state.detailProperty.propertyImages[0].url
+                                  .toString(),
+                              fit: BoxFit.cover,
+                              errorWidget: (context, error, stackTrace) {
+                                return Image(
+                                  image: AssetImage(
+                                      "assets/images/image_not_found.jpg"),
+                                  fit: BoxFit.scaleDown,
+                                );
+                              },
+                            )),
+                      ],
+                    );
+                  }
+                  return Container();
+                },
               ),
               Padding(
                 padding: const EdgeInsets.all(15.0),
@@ -72,16 +117,33 @@ class BookingCard extends StatelessWidget {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
-                        Text(
-                          'Title: ',
-                          style: TextStyle(
-                              fontSize: 15, fontWeight: FontWeight.bold),
+                        InkWell(
+                          onTap: () {
+                            Navigator.of(context, rootNavigator: true)
+                                .push(MaterialPageRoute(
+                              builder: (context) => PropertyDetailScreen(
+                                propertyId: widget.booking.propertyId,
+                              ),
+                            ));
+                          },
+                          child: Text(
+                            'Title: ',
+                            overflow: TextOverflow.ellipsis,
+                            style: TextStyle(
+                                fontSize: 18, fontWeight: FontWeight.bold),
+                          ),
                         ),
-                        Text('${booking.propertyName}')
+                        Expanded(
+                          child: Text(
+                            '${widget.booking.propertyName}',
+                            overflow: TextOverflow.ellipsis,
+                            style: TextStyle(fontSize: 18),
+                          ),
+                        )
                       ],
                     ),
                     SizedBox(
-                      height: 5,
+                      height: 7,
                     ),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.start,
@@ -89,13 +151,16 @@ class BookingCard extends StatelessWidget {
                         Text(
                           'Host name: ',
                           style: TextStyle(
-                              fontSize: 15, fontWeight: FontWeight.bold),
+                              fontSize: 18, fontWeight: FontWeight.bold),
                         ),
-                        Text('${booking.hostName}')
+                        Text(
+                          '${widget.booking.hostName}',
+                          style: TextStyle(fontSize: 18),
+                        )
                       ],
                     ),
                     SizedBox(
-                      height: 5,
+                      height: 7,
                     ),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.start,
@@ -103,13 +168,16 @@ class BookingCard extends StatelessWidget {
                         Text(
                           'Check in: ',
                           style: TextStyle(
-                              fontSize: 15, fontWeight: FontWeight.bold),
+                              fontSize: 18, fontWeight: FontWeight.bold),
                         ),
-                        Text('${booking.checkInDate}')
+                        Text(
+                          '${formatDateFunc(widget.booking.checkInDate)}',
+                          style: TextStyle(fontSize: 18),
+                        )
                       ],
                     ),
                     SizedBox(
-                      height: 5,
+                      height: 7,
                     ),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.start,
@@ -117,13 +185,16 @@ class BookingCard extends StatelessWidget {
                         Text(
                           'Check out: ',
                           style: TextStyle(
-                              fontSize: 15, fontWeight: FontWeight.bold),
+                              fontSize: 18, fontWeight: FontWeight.bold),
                         ),
-                        Text('${booking.checkOutDate}')
+                        Text(
+                          '${formatDateFunc(widget.booking.checkOutDate)}',
+                          style: TextStyle(fontSize: 18),
+                        )
                       ],
                     ),
                     SizedBox(
-                      height: 5,
+                      height: 7,
                     ),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.start,
@@ -131,13 +202,16 @@ class BookingCard extends StatelessWidget {
                         Text(
                           'Total Price: ',
                           style: TextStyle(
-                              fontSize: 15, fontWeight: FontWeight.bold),
+                              fontSize: 18, fontWeight: FontWeight.bold),
                         ),
-                        Text('${booking.totalPrice}')
+                        Text(
+                          '${widget.booking.totalPrice}',
+                          style: TextStyle(fontSize: 18),
+                        )
                       ],
                     ),
                     SizedBox(
-                      height: 5,
+                      height: 7,
                     ),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.start,
@@ -145,9 +219,15 @@ class BookingCard extends StatelessWidget {
                         Text(
                           'State: ',
                           style: TextStyle(
-                              fontSize: 15, fontWeight: FontWeight.bold),
+                              fontSize: 18, fontWeight: FontWeight.bold),
                         ),
-                        Text('${booking.status}')
+                        Text(
+                          '${widget.booking.status}',
+                          style: TextStyle(
+                              fontSize: 18,
+                              color: switchColorByBookingStatus(
+                                  '${widget.booking.status}')),
+                        )
                       ],
                     ),
                   ],
@@ -155,47 +235,75 @@ class BookingCard extends StatelessWidget {
               ),
             ],
           ),
-          booking.status == 'Confirmed'
-              ? Padding(
-                  padding: const EdgeInsets.all(10.0),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      TextButton(
-                          style: ButtonStyle(
-                              backgroundColor:
-                                  MaterialStateProperty.all(Colors.red)),
-                          onPressed: () {},
-                          child: Padding(
-                            padding: const EdgeInsets.all(10.0),
-                            child: Text(
-                              "Canncel",
-                              style:
-                                  TextStyle(color: Colors.white, fontSize: 16),
-                            ),
-                          )),
-                      TextButton(
-                          style: ButtonStyle(
-                              backgroundColor:
-                                  MaterialStateProperty.all(Colors.green)),
-                          onPressed: () {
-                            Navigator.of(context).push(MaterialPageRoute(
-                              builder: (context) => ResultQrCodeScreen(
-                                  code: '${booking.checkInCode}'),
-                            ));
-                          },
-                          child: Padding(
-                            padding: const EdgeInsets.all(10.0),
-                            child: Text(
-                              "QR Code",
-                              style:
-                                  TextStyle(color: Colors.white, fontSize: 16),
-                            ),
-                          )),
-                      SizedBox(
-                        height: 10,
-                      ),
-                    ],
+          widget.booking.status == 'Pending'
+              ? Center(
+                  child: Padding(
+                    padding: const EdgeInsets.only(bottom: 10),
+                    child: TextButton(
+                        style: ButtonStyle(
+                            backgroundColor:
+                                MaterialStateProperty.all(Colors.blue)),
+                        onPressed: () {
+                          Navigator.of(context).push(MaterialPageRoute(
+                            builder: (context) => PaymentScreen(),
+                          ));
+                        },
+                        child: Padding(
+                          padding: const EdgeInsets.all(10.0),
+                          child: Text(
+                            "Payment",
+                            style: TextStyle(color: Colors.white, fontSize: 18),
+                          ),
+                        )),
+                  ),
+                )
+              : SizedBox.shrink(),
+          widget.booking.status == 'Confirmed'
+              ? Center(
+                  child: Padding(
+                    padding: const EdgeInsets.only(top: 10, bottom: 20),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        TextButton(
+                            style: ButtonStyle(
+                                backgroundColor:
+                                    MaterialStateProperty.all(Colors.red)),
+                            onPressed: () {},
+                            child: Padding(
+                              padding: const EdgeInsets.all(10.0),
+                              child: Text(
+                                "Canncel",
+                                style: TextStyle(
+                                    color: Colors.white, fontSize: 18),
+                              ),
+                            )),
+                        SizedBox(
+                          width: 10,
+                        ),
+                        TextButton(
+                            style: ButtonStyle(
+                                backgroundColor:
+                                    MaterialStateProperty.all(Colors.green)),
+                            onPressed: () {
+                              Navigator.of(context).push(MaterialPageRoute(
+                                builder: (context) => ResultQrCodeScreen(
+                                    code: '${widget.booking.checkInCode}'),
+                              ));
+                            },
+                            child: Padding(
+                              padding: const EdgeInsets.all(10.0),
+                              child: Text(
+                                "QR Code",
+                                style: TextStyle(
+                                    color: Colors.white, fontSize: 18),
+                              ),
+                            )),
+                        SizedBox(
+                          height: 10,
+                        ),
+                      ],
+                    ),
                   ),
                 )
               : SizedBox.shrink(),

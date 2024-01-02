@@ -3,8 +3,10 @@ import 'dart:async';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:pbl6_aircnc/models/booking.dart';
+import 'package:pbl6_aircnc/models/property.dart';
 import 'package:pbl6_aircnc/models/user.dart';
 import 'package:pbl6_aircnc/repositories/booking_repo.dart';
+import 'package:pbl6_aircnc/repositories/property_repo.dart';
 
 part 'booking_event.dart';
 part 'booking_state.dart';
@@ -14,6 +16,7 @@ class BookingBloc extends Bloc<BookingEvent, BookingState> {
     on<LoadAllBookingEvent>(_onLoadAllBookingEvent);
     on<ClickToShowQrCodeEvent>(_onClickToShowQrCodeEvent);
     on<CheckInBookingEvent>(_onCheckInBookingEvent);
+    on<OrderBookingEvent>(_onOrderBookingEvent);
   }
 
   FutureOr<void> _onLoadAllBookingEvent(
@@ -22,8 +25,10 @@ class BookingBloc extends Bloc<BookingEvent, BookingState> {
 
     List<List<Booking>> lstBookingPages =
         await BookingRepo.getAllPagesBooking(guestId: user.id);
-
-    emit(LoaddAllBookingState(lstBookingPages: lstBookingPages));
+    List<List<Property>> lstAllPageProperties =
+        await PropertyRepo.getAllPagesProperty();
+    emit(LoaddAllBookingState(
+        lstBookingPages: lstBookingPages, lstProperties: lstAllPageProperties));
   }
 
   FutureOr<void> _onClickToShowQrCodeEvent(
@@ -39,5 +44,18 @@ class BookingBloc extends Bloc<BookingEvent, BookingState> {
     } else {
       emit(ScanCodeQrFailedState());
     }
+  }
+
+  FutureOr<void> _onOrderBookingEvent(
+      OrderBookingEvent event, Emitter<BookingState> emit) async {
+    bool checkOrder = await BookingRepo.orderBooking(
+        event.propertyId,
+        event.checkInDate,
+        event.checkOutDate,
+        event.numberOfAdults,
+        event.numberOfChildren,
+        event.note);
+
+    emit(OrderBookingSuccessState());
   }
 }

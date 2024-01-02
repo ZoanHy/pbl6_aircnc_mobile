@@ -10,9 +10,16 @@ sealed class AuthState extends Equatable {
 
 final class AuthInitial extends AuthState {}
 
+class AuthActionState extends AuthState {}
+
 class AunthenticateUninitializedState extends AuthState {}
 
-class AunthenticateInitializedState extends AuthState {}
+class AunthenticateInitializedState extends AuthState {
+  final User user;
+  AunthenticateInitializedState({
+    required this.user,
+  });
+}
 
 class AuthErrorState extends AuthState {}
 
@@ -52,3 +59,7 @@ class AuthSignUpFailedState extends AuthState {
 }
 
 class AuthLoadingState extends AuthState {}
+
+class AuthSignOutNavigateActionState extends AuthActionState {}
+
+class LoadingTabsPageState extends AuthState {}
