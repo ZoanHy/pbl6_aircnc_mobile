@@ -2,11 +2,9 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 import 'package:pbl6_aircnc/blocs/booking_bloc/booking_bloc.dart';
 import 'package:pbl6_aircnc/models/booking.dart';
-import 'package:url_launcher/url_launcher_string.dart';
 
 class PaymentScreen extends StatefulWidget {
   final int bookingId;
@@ -49,16 +47,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
                   ElevatedButton(
                     onPressed: () async {
                       print('click to web');
-                      final url = state.urlPayment;
-                      // print(url);
-                      if (await canLaunchUrlString(url)) {
-                        print('hi');
-                        launchUrlString(url, mode: LaunchMode.inAppBrowserView);
-                      } else {
-                        print('error payment');
-                      }
-
-                      launchUrl(Uri.parse(url), mode: LaunchMode.inAppWebView);
+                   
                     },
                     child: Padding(
                       padding: const EdgeInsets.all(15.0),

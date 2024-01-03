@@ -16,10 +16,8 @@ import 'package:pbl6_aircnc/screens/qr_scanner_screen.dart';
 import 'package:pbl6_aircnc/screens/result_qr_code_screen.dart';
 import 'package:pbl6_aircnc/screens/sign_in_screen.dart';
 import 'package:pbl6_aircnc/screens/tabs_screen.dart';
-import 'package:pbl6_aircnc/screens/test/test_vn_pay.dart';
 import 'package:pbl6_aircnc/screens/test_api_screen.dart';
 import 'package:pbl6_aircnc/screens/wishlist_screen.dart';
-import 'package:url_launcher/url_launcher_string.dart';
 
 void main() {
   runApp(const MyApp());
@@ -76,7 +74,7 @@ class MyApp extends StatelessWidget {
         //     if (await canLaunchUrlString(url)) {
         //       launchUrlString(url, mode: LaunchMode.inAppWebView);
         //     }
-          // },
+        // },
         // )),
       ),
     );
