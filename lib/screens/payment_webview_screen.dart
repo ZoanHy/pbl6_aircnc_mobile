@@ -16,14 +16,23 @@ class PaymentWebviewScreen extends StatefulWidget {
 class _PaymentWebviewScreenState extends State<PaymentWebviewScreen> {
   @override
   Widget build(BuildContext context) {
+    print('payment view');
+    print(widget.url);
+
     final controller = WebViewController()
       ..setJavaScriptMode(JavaScriptMode.unrestricted)
       ..loadRequest(Uri.parse(widget.url));
+
+    print('payment view');
+    print(widget.url);
 
     return Scaffold(
         appBar: AppBar(
           title: Text('Payment VNPay'),
         ),
-        body: SafeArea(child: WebViewWidget(controller: controller)));
+        body: SafeArea(
+            child: widget.url != ''
+                ? WebViewWidget(controller: controller)
+                : SizedBox()));
   }
 }

@@ -40,7 +40,10 @@ class _PaymentScreenState extends State<PaymentScreen> {
                 print('load payment to vnpay');
                 print(state.urlPayment);
                 Navigator.of(context).push(MaterialPageRoute(
-                  builder: (context) => PaymentWebviewScreen(url: 'https://www.youtube.com/'),
+                  builder: (context) => PaymentWebviewScreen(
+                      url: state.urlPayment
+                          .replaceAll(" ", '')
+                          .replaceAll('\"', '')),
                 ));
               }
             },
