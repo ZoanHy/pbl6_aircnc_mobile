@@ -25,29 +25,24 @@ class _PaymentScreenState extends State<PaymentScreen> {
   void initState() {
     // TODO: implement initState
     super.initState();
-
-    bookingBloc.add(LoadPaymentUrlEvent(bookingId: widget.bookingId));
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Payment'),
-      ),
-      body: BlocBuilder<BookingBloc, BookingState>(
-        bloc: bookingBloc,
-        builder: (context, state) {
-          if (state is LoadPaymentUrlState) {
-            print(state.urlPayment);
-            return Center(
+        appBar: AppBar(
+          title: Text('Payment'),
+        ),
+        body: BlocListener<BookingBloc, BookingState>(
+            listener: (context, state) {},
+            bloc: bookingBloc,
+            child: Center(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   ElevatedButton(
-                    onPressed: () async {
+                    onPressed: () {
                       print('click to web');
-                   
                     },
                     child: Padding(
                       padding: const EdgeInsets.all(15.0),
@@ -77,11 +72,6 @@ class _PaymentScreenState extends State<PaymentScreen> {
                   )
                 ],
               ),
-            );
-          }
-          return Container();
-        },
-      ),
-    );
+            )));
   }
 }
