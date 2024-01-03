@@ -34,7 +34,12 @@ class _PaymentScreenState extends State<PaymentScreen> {
           title: Text('Payment'),
         ),
         body: BlocListener<BookingBloc, BookingState>(
-            listener: (context, state) {},
+            listener: (context, state) {
+              if (state is LoadPaymentUrlState) {
+                print('load payment to vnpay');
+                print(state.urlPayment);
+              }
+            },
             bloc: bookingBloc,
             child: Center(
               child: Column(
@@ -43,6 +48,9 @@ class _PaymentScreenState extends State<PaymentScreen> {
                   ElevatedButton(
                     onPressed: () {
                       print('click to web');
+
+                      bookingBloc.add(
+                          LoadPaymentUrlEvent(bookingId: widget.bookingId));
                     },
                     child: Padding(
                       padding: const EdgeInsets.all(15.0),

@@ -59,6 +59,4 @@ class LoadPaymentUrlState extends BookingState {
   LoadPaymentUrlState({
     required this.urlPayment,
   });
-
-  
 }
