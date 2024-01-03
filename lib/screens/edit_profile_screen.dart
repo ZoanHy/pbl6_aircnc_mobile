@@ -1,11 +1,9 @@
-// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:icons_plus/icons_plus.dart';
 import 'package:pbl6_aircnc/blocs/user_bloc/user_bloc.dart';
 
-import 'package:pbl6_aircnc/models/user.dart';
 
 class EditProfileScreen extends StatefulWidget {
   int userId;

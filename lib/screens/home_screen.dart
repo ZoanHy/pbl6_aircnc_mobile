@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:loader_overlay/loader_overlay.dart';
 import 'package:number_paginator/number_paginator.dart';
-import 'package:pbl6_aircnc/blocs/auth_bloc/auth_bloc.dart';
 import 'package:pbl6_aircnc/blocs/property_bloc/property_bloc.dart';
 import 'package:pbl6_aircnc/models/property.dart';
 import 'package:pbl6_aircnc/widgets/property_card.dart';

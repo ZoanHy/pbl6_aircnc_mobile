@@ -5,6 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:pbl6_aircnc/blocs/booking_bloc/booking_bloc.dart';
 import 'package:pbl6_aircnc/models/booking.dart';
+import 'package:pbl6_aircnc/screens/payment_webview_screen.dart';
 
 class PaymentScreen extends StatefulWidget {
   final int bookingId;
@@ -38,6 +39,9 @@ class _PaymentScreenState extends State<PaymentScreen> {
               if (state is LoadPaymentUrlState) {
                 print('load payment to vnpay');
                 print(state.urlPayment);
+                Navigator.of(context).push(MaterialPageRoute(
+                  builder: (context) => PaymentWebviewScreen(url: 'https://www.youtube.com/'),
+                ));
               }
             },
             bloc: bookingBloc,

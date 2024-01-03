@@ -3,7 +3,6 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pbl6_aircnc/blocs/booking_bloc/booking_bloc.dart';
-import 'package:pbl6_aircnc/screens/sign_up_screen.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
 
 class QrScannerScreen extends StatefulWidget {
