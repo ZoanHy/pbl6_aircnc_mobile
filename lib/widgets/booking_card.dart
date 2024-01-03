@@ -245,12 +245,12 @@ class _BookingCardState extends State<BookingCard> {
                             backgroundColor:
                                 MaterialStateProperty.all(Colors.blue)),
                         onPressed: () {
-                          // Navigator.of(context, rootNavigator: true)
-                          //     .push(MaterialPageRoute(
-                          //   builder: (context) => PaymentScreen(
-                          //     booking: widget.booking,
-                          //   ),
-                          // ));
+                          Navigator.of(context, rootNavigator: true)
+                              .push(MaterialPageRoute(
+                            builder: (context) => PaymentScreen(
+                              bookingId: widget.booking.id,
+                            ),
+                          ));
                         },
                         child: Padding(
                           padding: const EdgeInsets.all(10.0),
