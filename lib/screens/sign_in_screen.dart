@@ -1,4 +1,3 @@
-import 'package:firebase_auth/firebase_auth.dart' as firebase_auth;
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -54,9 +53,6 @@ class _SignInScreenState extends State<SignInScreen> {
         TextEditingController(text: 'zoan12345');
     final TextEditingController passwordController =
         TextEditingController(text: '@Bcd1234');
-
-    firebase_auth.FirebaseAuth _firebaseAuth =
-        firebase_auth.FirebaseAuth.instance;
 
     return BlocConsumer<AuthBloc, AuthState>(
         bloc: authBloc,
@@ -326,9 +322,7 @@ class _SignInScreenState extends State<SignInScreen> {
                                       ContinueWith(
                                           'assets/images/social_media/facebook.png'),
                                       GestureDetector(
-                                        onTap: () {
-                                          _signInWithGoogle();
-                                        },
+                                        onTap: () {},
                                         child: ContinueWith(
                                             'assets/images/social_media/google.png'),
                                       ),
@@ -401,33 +395,6 @@ class _SignInScreenState extends State<SignInScreen> {
         image,
       ),
     );
-  }
-
-  _signInWithGoogle() async {
-    final GoogleSignIn _googleSignIn = GoogleSignIn();
-
-    try {
-      final GoogleSignInAccount? googleSignInAccount =
-          await _googleSignIn.signIn();
-
-      if (googleSignInAccount != null) {
-        final GoogleSignInAuthentication googleSignInAuthentication =
-            await googleSignInAccount.authentication;
-
-        final firebase_auth.AuthCredential credential =
-            firebase_auth.GoogleAuthProvider.credential(
-          idToken: googleSignInAuthentication.idToken,
-          accessToken: googleSignInAuthentication.accessToken,
-        );
-
-        await firebase_auth.FirebaseAuth.instance
-            .signInWithCredential(credential);
-        print('ok GG');
-      }
-    } catch (e) {
-      showToast(message: "some error occured $e");
-      print(e.toString());
-    }
   }
 
   void showToast({required String message}) {

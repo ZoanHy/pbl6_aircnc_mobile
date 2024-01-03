@@ -2,7 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:developer';
 
-import 'package:firebase_auth/firebase_auth.dart';
+// import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:pbl6_aircnc/models/user.dart' as UserModel;
@@ -14,7 +14,6 @@ class AuthRepo {
   static var signUpUrl = 'api/auth/sign-up';
   static final FlutterSecureStorage storage = const FlutterSecureStorage();
 
-  static final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
 
   static Future<UserModel.User?> signIn(
       String usernameOrEmail, String password) async {
@@ -93,30 +92,5 @@ class AuthRepo {
     await storage.deleteAll();
   }
 
-  static Future<bool> signInWithGoogle() async {
-    final GoogleSignIn _googleSignIn = GoogleSignIn();
-
-    try {
-      final GoogleSignInAccount? googleSignInAccount =
-          await _googleSignIn.signIn();
-
-      if (googleSignInAccount != null) {
-        final GoogleSignInAuthentication googleSignInAuthentication =
-            await googleSignInAccount.authentication;
-
-        final AuthCredential credential = GoogleAuthProvider.credential(
-            idToken: googleSignInAuthentication.idToken,
-            accessToken: googleSignInAuthentication.accessToken);
-
-        await _firebaseAuth.signInWithCredential(credential);
-
-        return true;
-      }
-
-      return false;
-    } catch (e) {
-      log(e.toString());
-      throw Exception('Sign up error');
-    }
-  }
+ 
 }

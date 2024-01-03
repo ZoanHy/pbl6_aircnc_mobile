@@ -19,20 +19,9 @@ import 'package:pbl6_aircnc/screens/tabs_screen.dart';
 import 'package:pbl6_aircnc/screens/test/test_vn_pay.dart';
 import 'package:pbl6_aircnc/screens/test_api_screen.dart';
 import 'package:pbl6_aircnc/screens/wishlist_screen.dart';
+import 'package:url_launcher/url_launcher_string.dart';
 
-Future main() async {
-  WidgetsFlutterBinding.ensureInitialized();
-  if (kIsWeb) {
-    await Firebase.initializeApp(
-        options: FirebaseOptions(
-            apiKey: 'AIzaSyCw4bWChdMAjS1OaUqCglwrC50kUFFw8Ww',
-            appId: '1:93837324418:android:0f0ed7cd3013662b0a849b',
-            messagingSenderId: '93837324418',
-            projectId: 'flutter-login-firebase-6710a'));
-  } else {
-    await Firebase.initializeApp();
-  }
-
+void main() {
   runApp(const MyApp());
 }
 
@@ -77,6 +66,18 @@ class MyApp extends StatelessWidget {
         // home: BookingDetailScreen(),
         // home: MyAppVNPay(),
         // home: EditProfileScreen(),
+
+        // home: Scaffold(
+        //     body: ElevatedButton(
+        //   child: Text('abc'),
+        //   onPressed: () async {
+        //     var url =
+        //         "https://sandbox.vnpayment.vn/paymentv2/vpcpay.html?vnp_Amount=2103700000&vnp_BankCode=VNBANK&vnp_Command=pay&vnp_CreateDate=20240103120943&vnp_CurrCode=VND&vnp_IpAddr=%3A%3Affff%3A172.17.0.21&vnp_Locale=vn&vnp_OrderInfo=%23638398553830686239+%7C+Thanh+toan+dat+phong+%23580&vnp_OrderType=other&vnp_ReturnUrl=https%3A%2F%2Faircnc.whitemage.tech%2Fbooking-checked&vnp_TmnCode=M76I10UL&vnp_TxnRef=638398553830686239&vnp_Version=2.1.0&vnp_SecureHash=18e3293ddcd099dc99fb7b147e034b76cd62fede2ad456b47881d3e1643b9adb3ce2e75baef46c5aec1d135b345a90b0667a662934013225dc7221a984e53cb2";
+        //     if (await canLaunchUrlString(url)) {
+        //       launchUrlString(url, mode: LaunchMode.inAppWebView);
+        //     }
+          // },
+        // )),
       ),
     );
   }

@@ -17,6 +17,7 @@ class BookingBloc extends Bloc<BookingEvent, BookingState> {
     on<ClickToShowQrCodeEvent>(_onClickToShowQrCodeEvent);
     on<CheckInBookingEvent>(_onCheckInBookingEvent);
     on<OrderBookingEvent>(_onOrderBookingEvent);
+    on<LoadPaymentUrlEvent>(_onLoadPaymentUrlEvent);
   }
 
   FutureOr<void> _onLoadAllBookingEvent(
@@ -48,7 +49,7 @@ class BookingBloc extends Bloc<BookingEvent, BookingState> {
 
   FutureOr<void> _onOrderBookingEvent(
       OrderBookingEvent event, Emitter<BookingState> emit) async {
-    bool checkOrder = await BookingRepo.orderBooking(
+    String checkBooking = await BookingRepo.orderBooking(
         event.propertyId,
         event.checkInDate,
         event.checkOutDate,
@@ -56,6 +57,21 @@ class BookingBloc extends Bloc<BookingEvent, BookingState> {
         event.numberOfChildren,
         event.note);
 
-    emit(OrderBookingSuccessState());
+    if (checkBooking.contains('ok')) {
+      int bookingId = int.parse(checkBooking.split(':')[1]);
+      print(bookingId);
+      emit(OrderBookingSuccessState(bookingId: bookingId));
+    } else {
+      String message = checkBooking;
+      print(message);
+      emit(OrderBookingFailedState(message: message));
+    }
+  }
+
+  FutureOr<void> _onLoadPaymentUrlEvent(
+      LoadPaymentUrlEvent event, Emitter<BookingState> emit) async {
+    String urlBooing = await BookingRepo.createPaymentBooking(event.bookingId);
+
+    emit(LoadPaymentUrlState(urlPayment: urlBooing));
   }
 }

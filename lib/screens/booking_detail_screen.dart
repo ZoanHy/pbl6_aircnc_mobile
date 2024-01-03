@@ -3,6 +3,7 @@ import 'package:calendar_date_picker2/calendar_date_picker2.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:intl/intl.dart';
 import 'package:pbl6_aircnc/blocs/booking_bloc/booking_bloc.dart';
 
@@ -37,7 +38,7 @@ class _BookingDetailScreenState extends State<BookingDetailScreen> {
   int daysBetween(DateTime from, DateTime to) {
     from = DateTime(from.year, from.month, from.day);
     to = DateTime(to.year, to.month, to.day);
-    return (to.difference(from).inHours / 24).round();
+    return (to.difference(from).inHours / 24).round() + 1;
   }
 
   String formatDateFunc(DateTime date) {
@@ -48,10 +49,9 @@ class _BookingDetailScreenState extends State<BookingDetailScreen> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    final data = daysBetween(startDate, endDate);
     setState(() {
       // update the result
-      difference = data;
+      difference = daysBetween(startDate, endDate);
     });
   }
 
@@ -67,9 +67,15 @@ class _BookingDetailScreenState extends State<BookingDetailScreen> {
             // TODO: implement listener
             if (state is OrderBookingSuccessState) {
               print('order success');
+
               Navigator.of(context).push(MaterialPageRoute(
-                builder: (context) => PaymentScreen(),
+                builder: (context) => PaymentScreen(
+                  bookingId: state.bookingId,
+                ),
               ));
+            } else if (state is OrderBookingFailedState) {
+              Fluttertoast.showToast(
+                  msg: state.message, textColor: Colors.red, fontSize: 16);
             }
           },
           builder: (context, state) {
@@ -145,6 +151,11 @@ class _BookingDetailScreenState extends State<BookingDetailScreen> {
                                                 dates[0].toString());
                                             endDate = DateTime.parse(
                                                 dates[1].toString());
+                                            setState(() {
+                                              // update the result
+                                              difference = daysBetween(
+                                                  startDate, endDate);
+                                            });
                                           });
                                           print(dates);
                                           Navigator.pop(context);

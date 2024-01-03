@@ -48,7 +48,7 @@ class OrderBookingEvent extends BookingEvent {
   final int numberOfAdults;
   final int numberOfChildren;
   final String note;
-  
+
   OrderBookingEvent({
     required this.propertyId,
     required this.checkInDate,
@@ -56,5 +56,12 @@ class OrderBookingEvent extends BookingEvent {
     required this.numberOfAdults,
     required this.numberOfChildren,
     required this.note,
+  });
+}
+
+class LoadPaymentUrlEvent extends BookingEvent {
+  final int bookingId;
+  LoadPaymentUrlEvent({
+    required this.bookingId,
   });
 }

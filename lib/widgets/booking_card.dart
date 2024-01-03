@@ -92,7 +92,8 @@ class _BookingCardState extends State<BookingCard> {
                                   topRight: Radius.circular(16)),
                             ),
                             child: CachedNetworkImage(
-                              imageUrl: state.detailProperty.propertyImages[0].url
+                              imageUrl: state
+                                  .detailProperty.propertyImages[0].url
                                   .toString(),
                               fit: BoxFit.cover,
                               errorWidget: (context, error, stackTrace) {
@@ -244,9 +245,12 @@ class _BookingCardState extends State<BookingCard> {
                             backgroundColor:
                                 MaterialStateProperty.all(Colors.blue)),
                         onPressed: () {
-                          Navigator.of(context).push(MaterialPageRoute(
-                            builder: (context) => PaymentScreen(),
-                          ));
+                          // Navigator.of(context, rootNavigator: true)
+                          //     .push(MaterialPageRoute(
+                          //   builder: (context) => PaymentScreen(
+                          //     booking: widget.booking,
+                          //   ),
+                          // ));
                         },
                         child: Padding(
                           padding: const EdgeInsets.all(10.0),

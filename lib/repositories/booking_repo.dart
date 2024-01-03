@@ -115,7 +115,7 @@ class BookingRepo {
     }
   }
 
-  static Future<bool> orderBooking(
+  static Future<String> orderBooking(
       int propertyId,
       DateTime checkInDate,
       DateTime checkOutDate,
@@ -131,8 +131,9 @@ class BookingRepo {
       "note": note.toString()
     });
 
-    String? token = await storage.read(key: 'accessToken');
     try {
+      String? token = await storage.read(key: 'accessToken');
+
       var client = http.Client();
       final uri = Uri.parse('https://${baseUrl}/${postBooking}');
       var headers = {
@@ -141,14 +142,39 @@ class BookingRepo {
         'Authorization': 'Bearer $token',
       };
       var response = await client.post(uri, headers: headers, body: body);
+      var result = json.decode(response.body);
       print(response.body);
+
       if (response.statusCode == 200) {
-        return true;
+        return 'ok:${result['id']}';
       }
-      return false;
+
+      var errors = result['detail'];
+
+      return errors.toString();
     } catch (e) {
       log(e.toString());
       throw Exception('error post booking');
+    }
+  }
+
+  static Future<String> createPaymentBooking(int bookingId) async {
+    try {
+      final uri =
+          Uri.parse('https://pbl6.whitemage.tech/api/payment/create-payment');
+      final headers = {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+      };
+      final body =
+          jsonEncode({'bookingId': bookingId.toString(), 'password': 'VNBANK'});
+
+      final response = await http.post(uri, headers: headers, body: body);
+
+      return response.body;
+    } catch (e) {
+      log(e.toString());
+      throw Exception('Error create payment');
     }
   }
 }

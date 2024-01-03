@@ -40,4 +40,25 @@ class ScanCodeQrSuccessAndReturnProfileState extends BookingActionState {}
 
 class ScanCodeQrFailedState extends BookingActionState {}
 
-class OrderBookingSuccessState extends BookingActionState {}
+class OrderBookingSuccessState extends BookingActionState {
+  final int bookingId;
+  OrderBookingSuccessState({
+    required this.bookingId,
+  });
+}
+
+class OrderBookingFailedState extends BookingActionState {
+  final String message;
+  OrderBookingFailedState({
+    required this.message,
+  });
+}
+
+class LoadPaymentUrlState extends BookingState {
+  final String urlPayment;
+  LoadPaymentUrlState({
+    required this.urlPayment,
+  });
+
+  
+}
