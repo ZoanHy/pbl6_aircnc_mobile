@@ -3,6 +3,7 @@ import 'dart:developer';
 
 import 'package:pbl6_aircnc/models/host.dart';
 import 'package:http/http.dart' as http;
+import 'package:pbl6_aircnc/models/user.dart';
 
 class HostRepo {
   static String baseUrl = 'pbl6.whitemage.tech';

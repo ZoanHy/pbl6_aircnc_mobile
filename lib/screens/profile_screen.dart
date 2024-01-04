@@ -44,7 +44,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
             builder: (context) => SignInScreen(),
           ));
         }
-        
       },
       child: Scaffold(
         appBar: AppBar(

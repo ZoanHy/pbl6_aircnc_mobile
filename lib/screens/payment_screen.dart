@@ -51,6 +51,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
             child: Center(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   ElevatedButton(
                     onPressed: () {

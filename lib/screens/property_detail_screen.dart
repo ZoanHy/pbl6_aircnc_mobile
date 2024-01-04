@@ -7,10 +7,16 @@ import 'package:icons_plus/icons_plus.dart';
 import 'package:intl/intl.dart';
 import 'package:pbl6_aircnc/blocs/host_bloc/host_bloc.dart';
 import 'package:pbl6_aircnc/blocs/property_bloc/property_bloc.dart';
+import 'package:pbl6_aircnc/blocs/review_bloc/review_bloc.dart';
 import 'package:pbl6_aircnc/blocs/wishlist_bloc/wishlist_bloc.dart';
 
 import 'package:pbl6_aircnc/models/property.dart';
 import 'package:pbl6_aircnc/screens/booking_detail_screen.dart';
+import 'package:pbl6_aircnc/screens/reviews_screen.dart';
+import 'package:pbl6_aircnc/widgets/host_card_book.dart';
+import 'package:pbl6_aircnc/widgets/list_tile_basic_offer.dart';
+import 'package:pbl6_aircnc/widgets/overall_property_rating.dart';
+import 'package:pbl6_aircnc/widgets/user_review_card.dart';
 
 class PropertyDetailScreen extends StatefulWidget {
   final int propertyId;
@@ -28,6 +34,7 @@ class _PropertyDetailScreenState extends State<PropertyDetailScreen> {
   final PropertyBloc propertyBloc = PropertyBloc();
   final WishlistBloc wishlistBloc = WishlistBloc();
   final HostBloc hostBloc = HostBloc();
+  final ReviewBloc reviewBloc = ReviewBloc();
 
   final controller = PageController();
   var currentPage = 0;
@@ -39,6 +46,7 @@ class _PropertyDetailScreenState extends State<PropertyDetailScreen> {
     // TODO: implement initState
     super.initState();
     propertyBloc.add(LoadAllDetailPropertyEvent(propertyId: widget.propertyId));
+    reviewBloc.add(LoadReviewEvent(propertyId: widget.propertyId));
   }
 
   @override
@@ -262,12 +270,20 @@ class _PropertyDetailScreenState extends State<PropertyDetailScreen> {
                           SizedBox(
                             width: 8,
                           ),
-                          Text(
-                            '${detailProperty.numberOfReviews} reviews',
-                            style: TextStyle(
-                                fontSize: 17,
-                                fontWeight: FontWeight.w500,
-                                decoration: TextDecoration.underline),
+                          InkWell(
+                            onTap: () {
+                              Navigator.of(context).push(MaterialPageRoute(
+                                builder: (context) =>
+                                    ReviewScreen(propertyId: widget.propertyId),
+                              ));
+                            },
+                            child: Text(
+                              '${detailProperty.numberOfReviews} reviews',
+                              style: TextStyle(
+                                  fontSize: 17,
+                                  fontWeight: FontWeight.w500,
+                                  decoration: TextDecoration.underline),
+                            ),
                           )
                         ],
                       ),
@@ -304,128 +320,13 @@ class _PropertyDetailScreenState extends State<PropertyDetailScreen> {
                         bloc: hostBloc,
                         builder: (context, state) {
                           if (state is LoadDetailHostState) {
-                            return Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Expanded(
-                                      child: Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          ListTile(
-                                            leading: Icon(
-                                              FontAwesome.note_sticky,
-                                              size: 20,
-                                              color: Colors.purple,
-                                            ),
-                                            title: Text(
-                                                'Reviews: ${state.host.numberOfReviews}',
-                                                style: TextStyle(
-                                                    fontSize: 20,
-                                                    fontWeight:
-                                                        FontWeight.w500)),
-                                          ),
-                                          ListTile(
-                                            leading: Icon(
-                                              Icons.star,
-                                              size: 20,
-                                              color: Color.fromRGBO(
-                                                  254, 178, 7, 5),
-                                            ),
-                                            title: Text(
-                                                'Rating: ${(state.host.rating).toStringAsFixed(2)}',
-                                                style: TextStyle(
-                                                    fontSize: 20,
-                                                    fontWeight:
-                                                        FontWeight.w500)),
-                                          ),
-                                          Column(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            children: [
-                                              Text(
-                                                'Joining date at:',
-                                                style: TextStyle(
-                                                    fontSize: 20,
-                                                    fontWeight:
-                                                        FontWeight.bold),
-                                              ),
-                                              SizedBox(
-                                                height: 5,
-                                              ),
-                                              Text(
-                                                '${DateFormat('dd/MM/yyyy').format(state.host.joinedAt)}',
-                                                style: TextStyle(fontSize: 18),
-                                              )
-                                            ],
-                                          )
-                                        ],
-                                      ),
-                                    ),
-                                    SizedBox(
-                                      width: 20,
-                                    ),
-                                    Column(
-                                      children: [
-                                        SizedBox(
-                                          width: 80,
-                                          height: 80,
-                                          child: Expanded(
-                                            child: ClipRRect(
-                                              borderRadius:
-                                                  BorderRadius.circular(100),
-                                              child: state.host.avatarUrl !=
-                                                      null
-                                                  ? CachedNetworkImage(
-                                                      imageUrl: state
-                                                          .host.avatarUrl
-                                                          .toString(),
-                                                      fit: BoxFit.cover,
-                                                      errorWidget: (context,
-                                                          error, stackTrace) {
-                                                        return Image(
-                                                          image: AssetImage(
-                                                              "assets/images/image_not_found.jpg"),
-                                                          fit: BoxFit.scaleDown,
-                                                        );
-                                                      },
-                                                    )
-                                                  : Text(
-                                                      '${state.host.name[0].toUpperCase()}',
-                                                      style: TextStyle(
-                                                          fontSize: 20),
-                                                    ),
-                                            ),
-                                          ),
-                                        ),
-                                        SizedBox(
-                                          height: 10,
-                                        ),
-                                        Text(
-                                          '${state.host.name}',
-                                          style: TextStyle(
-                                            fontSize: 17,
-                                            color: Colors.blue.shade700,
-                                            fontWeight: FontWeight.bold,
-                                          ),
-                                          softWrap: true,
-                                        )
-                                      ],
-                                    ),
-                                  ],
-                                ),
-                              ],
-                            );
+                            return HostCardBook(hostInfoDetail: state.host,);
                           }
                           return SizedBox.shrink();
                         },
                       ),
-                      const SizedBox(
-                        height: 25,
+                      SizedBox(
+                        height: 15,
                       ),
                       const Divider(
                         height: 1,
@@ -496,7 +397,10 @@ class _PropertyDetailScreenState extends State<PropertyDetailScreen> {
                                       fontSize: 16,
                                       color: Colors.grey,
                                       fontWeight: FontWeight.w300),
-                                )
+                                ),
+                                SizedBox(
+                                  height: 10,
+                                ),
                               ],
                             ),
                             const SizedBox(
@@ -528,21 +432,61 @@ class _PropertyDetailScreenState extends State<PropertyDetailScreen> {
                                 )
                               ],
                             ),
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  "Reviews",
-                                  style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      color: Colors.blue.shade900,
-                                      fontSize: 18),
-                                ),
-                                SizedBox(
-                                  height: 10,
-                                ),
-                                
-                              ],
+                            BlocBuilder<ReviewBloc, ReviewState>(
+                              bloc: reviewBloc,
+                              builder: (context, state) {
+                                if (state is LoadReviewState) {
+                                  return Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        "Reviews",
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            color: Colors.blue.shade900,
+                                            fontSize: 18),
+                                      ),
+                                      SizedBox(
+                                        height: 10,
+                                      ),
+                                      Container(
+                                        height:
+                                            MediaQuery.of(context).size.height *
+                                                0.5,
+                                        child: Expanded(
+                                          child: Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              OverallPropertyRating(
+                                                  lstReview: state.lstReview),
+                                              SizedBox(
+                                                height: 15,
+                                              ),
+                                              Expanded(
+                                                child: ListView.builder(
+                                                  shrinkWrap: true,
+                                                  itemCount:
+                                                      state.lstReview.length,
+                                                  itemBuilder:
+                                                      (context, index) {
+                                                    return UserReviewCard(
+                                                        review: state
+                                                            .lstReview[index]);
+                                                  },
+                                                ),
+                                              )
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  );
+                                }
+
+                                return Container();
+                              },
                             ),
                           ],
                         ),
@@ -556,36 +500,6 @@ class _PropertyDetailScreenState extends State<PropertyDetailScreen> {
         }
         return Center();
       },
-    );
-  }
-}
-
-class ListTileBasicOffer extends StatelessWidget {
-  final IconData icon;
-  final String title;
-  final String subCountInfo;
-  Color? color;
-
-  ListTileBasicOffer({
-    Key? key,
-    required this.icon,
-    required this.title,
-    required this.subCountInfo,
-    this.color,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return ListTile(
-      leading: Icon(
-        icon,
-        size: 20,
-        color: color != null ? color : Colors.blue,
-      ),
-      title: Text(title,
-          style: TextStyle(fontSize: 20, fontWeight: FontWeight.w500)),
-      subtitle: Text(subCountInfo,
-          style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500)),
     );
   }
 }

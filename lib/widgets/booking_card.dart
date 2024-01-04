@@ -206,8 +206,11 @@ class _BookingCardState extends State<BookingCard> {
                               fontSize: 18, fontWeight: FontWeight.bold),
                         ),
                         Text(
-                          '${widget.booking.totalPrice}',
-                          style: TextStyle(fontSize: 18),
+                          '${NumberFormat.currency(locale: 'vi_VN').format(widget.booking.totalPrice)}',
+                          style: TextStyle(
+                              fontSize: 18,
+                              color: Colors.red,
+                              fontWeight: FontWeight.bold),
                         )
                       ],
                     ),
