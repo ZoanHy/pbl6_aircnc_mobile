@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:pbl6_aircnc/blocs/booking_bloc/booking_bloc.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
 
@@ -29,6 +30,8 @@ class _QrScannerScreenState extends State<QrScannerScreen> {
     }
   }
 
+  bool isCheck = false;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -37,44 +40,63 @@ class _QrScannerScreenState extends State<QrScannerScreen> {
         listener: (context, state) {
           // TODO: implement listener
           if (state is ScanCodeQrFailedState) {
-            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                content: Text(
-              'Check in failed',
-              style: TextStyle(color: Colors.green),
-            )));
+            Fluttertoast.showToast(
+                msg: 'Check in Failed',
+                backgroundColor: Colors.red,
+                timeInSecForIosWeb: 1,
+                gravity: ToastGravity.BOTTOM);
           } else if (state is ScanCodeQrSuccessAndReturnProfileState) {
-            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                content: Text(
-              'Check in successfully',
-              style: TextStyle(color: Colors.red),
-            )));
+            Fluttertoast.showToast(
+                msg: 'Check in Success',
+                backgroundColor: Colors.green,
+                timeInSecForIosWeb: 1,
+                gravity: ToastGravity.BOTTOM);
             Navigator.pop(context);
-          }
+          } 
         },
         child: Container(
           child: Column(
             children: [
-              Expanded(
-                  flex: 5,
+              Container(
+                  height: MediaQuery.of(context).size.height * 0.7,
                   child: QRView(
                     key: qrKey,
                     onQRViewCreated: onQRViewCamera,
                   )),
-             Center(
-                child: result != null
+              SizedBox(
+                height: 15,
+              ),
+              Center(
+                child: (result != null)
                     ? ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.green),
                         onPressed: () {
                           bookingBloc.add(CheckInBookingEvent(
                               code: '${result?.code.toString()}'));
                         },
-                        child: Text('Check in'))
-                    : Text('Scan a code'),
+                        child: Text(
+                          'Check in',
+                          style: TextStyle(
+                            fontSize: 16,
+                          ),
+                        ))
+                    : Text(
+                        'Scan a code',
+                        style: TextStyle(fontSize: 16),
+                      ),
+              ),
+              SizedBox(
+                height: 15,
               ),
               ElevatedButton(
                   onPressed: () {
                     Navigator.pop(context);
                   },
-                  child: Text("Go back")),
+                  child: Text(
+                    "Go back",
+                    style: TextStyle(fontSize: 16),
+                  )),
             ],
           ),
         ),

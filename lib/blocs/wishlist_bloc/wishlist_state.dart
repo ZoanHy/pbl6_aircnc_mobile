@@ -21,3 +21,5 @@ class LoadAllWishlistState extends WishlistState {
 }
 
 class LikeOrDislikeState extends WishlistState {}
+
+class LoadingWishlistPageState extends WishlistState {}

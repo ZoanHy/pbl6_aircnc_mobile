@@ -270,21 +270,26 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         ),
                         // i agree to the processing
                         Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Checkbox(
-                              value: agreePersonalData,
-                              onChanged: (bool? value) {
-                                setState(() {
-                                  agreePersonalData = value!;
-                                });
-                              },
-                              activeColor: Color(0xFF416FDF),
-                            ),
-                            const Text(
-                              'I agree to the processing of ',
-                              style: TextStyle(
-                                color: Colors.black45,
-                              ),
+                            Row(
+                              children: [
+                                Checkbox(
+                                  value: agreePersonalData,
+                                  onChanged: (bool? value) {
+                                    setState(() {
+                                      agreePersonalData = value!;
+                                    });
+                                  },
+                                  activeColor: Color(0xFF416FDF),
+                                ),
+                                const Text(
+                                  'I agree to \nthe processing',
+                                  style: TextStyle(
+                                    color: Colors.black45,
+                                  ),
+                                ),
+                              ],
                             ),
                             Text(
                               'Personal data',

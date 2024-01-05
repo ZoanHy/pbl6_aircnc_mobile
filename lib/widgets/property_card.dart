@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:dots_indicator/dots_indicator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:intl/intl.dart';
 import 'package:pbl6_aircnc/blocs/wishlist_bloc/wishlist_bloc.dart';
 import 'package:pbl6_aircnc/models/property.dart';
@@ -124,10 +125,18 @@ class _PropertyCardState extends State<PropertyCard> {
                     builder: (context, state) {
                       return IconButton(
                           onPressed: () {
-                            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                              content: Text('Success'),
-                              backgroundColor: Colors.green,
-                            ));
+                            if (!isFavorite) {
+                              Fluttertoast.showToast(
+                                  msg: 'Add to Wishlist',
+                                  gravity: ToastGravity.BOTTOM,
+                                  backgroundColor: Colors.green);
+                            } else {
+                              Fluttertoast.showToast(
+                                  gravity: ToastGravity.BOTTOM,
+                                  msg: 'Remove to Wishlist',
+                                  backgroundColor: Colors.red);
+                            }
+
                             wishlistBloc.add(ClickToLikeOrDislikeEvent(
                                 property: widget.property));
                             setState(() {

@@ -30,6 +30,13 @@ class _WishlistScreenState extends State<WishlistScreen> {
     return BlocBuilder<WishlistBloc, WishlistState>(
       bloc: wishlistBloc,
       builder: (context, state) {
+        if (state is LoadingWishlistPageState) {
+          return Scaffold(
+            body: Center(
+              child: CircularProgressIndicator(),
+            ),
+          );
+        }
         if (state is LoadAllWishlistState) {
           numberOfPages = state.wishlistPropertiesPage.length;
           var pages;

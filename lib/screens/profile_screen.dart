@@ -33,8 +33,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   @override
   Widget build(BuildContext context) {
-    print('profile screen');
-
     return BlocListener<AuthBloc, AuthState>(
       bloc: authBloc,
       listener: (context, state) {
@@ -52,7 +50,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
           actions: [
             IconButton(
                 onPressed: () {
-                  print('sign out');
                   authBloc.add(AuthSignOutEvent());
                 },
                 icon: Icon(Icons.logout_rounded))
@@ -128,12 +125,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         side: BorderSide.none,
                         shape: StadiumBorder()),
                     onPressed: () {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) =>
-                                EditProfileScreen(userId: widget.user.id),
-                          ));
+                      Navigator.of(context, rootNavigator: true)
+                          .push(MaterialPageRoute(
+                        builder: (context) =>
+                            EditProfileScreen(userId: widget.user.id),
+                      ));
                     },
                     child: Padding(
                       padding: const EdgeInsets.all(15.0),
@@ -164,11 +160,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         title: 'Scan Qr Code',
                         icon: LineAwesome.qrcode_solid,
                         onPress: () {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => QrScannerScreen(),
-                              ));
+                          Navigator.of(context, rootNavigator: true)
+                              .push(MaterialPageRoute(
+                            builder: (context) => QrScannerScreen(),
+                          ));
                         },
                       )
                     : SizedBox.shrink(),

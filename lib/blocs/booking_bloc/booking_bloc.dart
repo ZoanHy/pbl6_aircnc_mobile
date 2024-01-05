@@ -18,6 +18,7 @@ class BookingBloc extends Bloc<BookingEvent, BookingState> {
     on<CheckInBookingEvent>(_onCheckInBookingEvent);
     on<OrderBookingEvent>(_onOrderBookingEvent);
     on<LoadPaymentUrlEvent>(_onLoadPaymentUrlEvent);
+    on<LoadBookingDateEvent>(_onLoadBookingDateEvent);
   }
 
   FutureOr<void> _onLoadAllBookingEvent(
@@ -28,6 +29,8 @@ class BookingBloc extends Bloc<BookingEvent, BookingState> {
         await BookingRepo.getAllPagesBooking(guestId: user.id);
     List<List<Property>> lstAllPageProperties =
         await PropertyRepo.getAllPagesProperty();
+    emit(LoadingBookingPageState());
+    await Future.delayed(Duration(seconds: 2));
     emit(LoaddAllBookingState(
         lstBookingPages: lstBookingPages, lstProperties: lstAllPageProperties));
   }
@@ -56,14 +59,12 @@ class BookingBloc extends Bloc<BookingEvent, BookingState> {
         event.numberOfAdults,
         event.numberOfChildren,
         event.note);
-
+    print(checkBooking);
     if (checkBooking.contains('ok')) {
       int bookingId = int.parse(checkBooking.split(':')[1]);
-      print(bookingId);
       emit(OrderBookingSuccessState(bookingId: bookingId));
     } else {
       String message = checkBooking;
-      print(message);
       emit(OrderBookingFailedState(message: message));
     }
   }
@@ -73,5 +74,14 @@ class BookingBloc extends Bloc<BookingEvent, BookingState> {
     String urlBooing = await BookingRepo.createPaymentBooking(event.bookingId);
 
     emit(LoadPaymentUrlState(urlPayment: urlBooing));
+  }
+
+  FutureOr<void> _onLoadBookingDateEvent(
+      LoadBookingDateEvent event, Emitter<BookingState> emit) async {
+    List<List<DateTime>> lstDateTimes =
+        await BookingRepo.getTimeOfBookingIsInProperty(
+            propertyId: event.propertyId);
+
+    emit(LoadBookingDateState(lstDateTimes: lstDateTimes));
   }
 }

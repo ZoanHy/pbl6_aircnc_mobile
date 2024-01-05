@@ -33,7 +33,6 @@ class PropertyBloc extends Bloc<PropertyEvent, PropertyState> {
         }
       }
       emit(LoadingHomePageState());
-      await Future.delayed(Duration(seconds: 2));
       emit(LoadAllPropertyState(lstAllPageProperties));
     } catch (e) {
       // Handle exceptions or errors here

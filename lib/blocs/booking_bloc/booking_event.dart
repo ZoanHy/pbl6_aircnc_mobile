@@ -65,3 +65,11 @@ class LoadPaymentUrlEvent extends BookingEvent {
     required this.bookingId,
   });
 }
+
+class LoadBookingDateEvent extends BookingEvent {
+  final int propertyId;
+  LoadBookingDateEvent({
+    required this.propertyId,
+  });
+  
+}

@@ -36,7 +36,7 @@ class LandlordInfo extends StatelessWidget {
           children: [
             Text(
               '${hostInfoDetail.rating.toStringAsFixed(2)}',
-              style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w700),
+              style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w700),
             ),
             const SizedBox(width: 2),
             const Icon(Icons.star_rounded, size: 20),
@@ -49,10 +49,10 @@ class LandlordInfo extends StatelessWidget {
         const SizedBox(height: 8),
         const Divider(thickness: 0.8),
         const SizedBox(height: 8),
-         Text(
+        Text(
           '${DateFormat('dd/MM/yyyy').format(hostInfoDetail.joinedAt)}',
           style: TextStyle(
-            fontSize: 18,
+            fontSize: 16,
             fontWeight: FontWeight.w700,
           ),
         ),

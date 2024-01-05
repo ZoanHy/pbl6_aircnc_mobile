@@ -10,6 +10,7 @@ import 'package:pbl6_aircnc/screens/payment_screen.dart';
 
 class BookingDetailScreen extends StatefulWidget {
   Property property;
+
   BookingDetailScreen({
     Key? key,
     required this.property,
@@ -47,6 +48,7 @@ class _BookingDetailScreenState extends State<BookingDetailScreen> {
   void initState() {
     // TODO: implement initState
     super.initState();
+    bookingBloc.add(LoadBookingDateEvent(propertyId: widget.property.id));
     setState(() {
       // update the result
       difference = daysBetween(startDate, endDate);
@@ -55,6 +57,8 @@ class _BookingDetailScreenState extends State<BookingDetailScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final size = MediaQuery.of(context).size;
+
     return Scaffold(
         appBar: AppBar(
           title: Text('Confirm and pay'),
@@ -106,59 +110,117 @@ class _BookingDetailScreenState extends State<BookingDetailScreen> {
                                   showModalBottomSheet(
                                     context: context,
                                     builder: (context) {
-                                      return CalendarDatePicker2WithActionButtons(
-                                        config:
-                                            CalendarDatePicker2WithActionButtonsConfig(
-                                                firstDayOfWeek: 1,
-                                                calendarType:
-                                                    CalendarDatePicker2Type
-                                                        .range,
-                                                selectedDayTextStyle: TextStyle(
-                                                    color: Colors.white,
-                                                    fontWeight:
-                                                        FontWeight.w700),
-                                                selectedDayHighlightColor:
-                                                    Colors.blue[800],
-                                                centerAlignModePicker: true,
-                                                customModePickerIcon:
-                                                    SizedBox(),
-                                                weekdayLabels: [
-                                                  'Sun',
-                                                  'Mon',
-                                                  'Tue',
-                                                  'Wed',
-                                                  'Thu',
-                                                  'Fri',
-                                                  'Sat'
-                                                ],
-                                                weekdayLabelTextStyle:
-                                                    TextStyle(
-                                                        color: Colors.black87,
-                                                        fontWeight:
-                                                            FontWeight.bold),
-                                                // controlsHeight: 50,
-                                                controlsTextStyle: TextStyle(
-                                                    color: Colors.black,
-                                                    fontSize: 15,
-                                                    fontWeight:
-                                                        FontWeight.bold)),
-                                        value: [startDate, endDate],
-                                        onValueChanged: (dates) {
-                                          setState(() {
-                                            startDate = DateTime.parse(
-                                                dates[0].toString());
-                                            endDate = DateTime.parse(
-                                                dates[1].toString());
-                                            setState(() {
-                                              // update the result
-                                              difference = daysBetween(
-                                                  startDate, endDate);
-                                            });
+                                      return BlocBuilder<BookingBloc,
+                                              BookingState>(
+                                          bloc: bookingBloc,
+                                          builder: (context, state) {
+                                            if (state is LoadBookingDateState) {
+                                              return SingleChildScrollView(
+                                                child:
+                                                    CalendarDatePicker2WithActionButtons(
+                                                  config:
+                                                      CalendarDatePicker2WithActionButtonsConfig(
+                                                          firstDate:
+                                                              DateTime.now(),
+                                                          selectableDayPredicate:
+                                                              (day) {
+                                                            List<List<DateTime>>
+                                                                lstDateTimes =
+                                                                state
+                                                                    .lstDateTimes;
+                                                                    
+                                                            bool check = true;
+
+                                                            for (List<
+                                                                    DateTime> subLstDateTimes
+                                                                in lstDateTimes) {
+                                                              bool isInDateRange = day.isAfter(subLstDateTimes[
+                                                                          0]
+                                                                      .subtract(Duration(
+                                                                          days:
+                                                                              1))) &&
+                                                                  day.isBefore(subLstDateTimes[
+                                                                          1]
+                                                                      .add(Duration(
+                                                                          days:
+                                                                              1)));
+                                                              check = check &&
+                                                                  !isInDateRange;
+                                                            }
+
+                                                            return check;
+                                                          },
+                                                          disabledDayTextStyle:
+                                                              const TextStyle(
+                                                            color: Colors.grey,
+                                                          ),
+                                                          firstDayOfWeek: 1,
+                                                          calendarType:
+                                                              CalendarDatePicker2Type
+                                                                  .range,
+                                                          selectedDayTextStyle:
+                                                              TextStyle(
+                                                                  color: Colors
+                                                                      .white,
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .w700),
+                                                          selectedDayHighlightColor:
+                                                              Colors.blue[800],
+                                                          centerAlignModePicker:
+                                                              true,
+                                                          customModePickerIcon:
+                                                              SizedBox(),
+                                                          weekdayLabels: [
+                                                            'Sun',
+                                                            'Mon',
+                                                            'Tue',
+                                                            'Wed',
+                                                            'Thu',
+                                                            'Fri',
+                                                            'Sat'
+                                                          ],
+                                                          weekdayLabelTextStyle:
+                                                              TextStyle(
+                                                                  color: Colors
+                                                                      .black87,
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .bold),
+                                                          // controlsHeight: 50,
+                                                          controlsTextStyle:
+                                                              TextStyle(
+                                                                  color: Colors
+                                                                      .black,
+                                                                  fontSize: 15,
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .bold)),
+                                                  value: [startDate, endDate],
+                                                  onValueChanged: (dates) {
+                                                    setState(() {
+                                                      startDate =
+                                                          DateTime.parse(
+                                                              dates[0]
+                                                                  .toString());
+                                                      endDate = DateTime.parse(
+                                                          dates[1].toString());
+                                                      setState(() {
+                                                        // update the result
+                                                        difference =
+                                                            daysBetween(
+                                                                startDate,
+                                                                endDate);
+                                                      });
+                                                    });
+                                                    print(dates);
+                                                    Navigator.pop(context);
+                                                  },
+                                                ),
+                                              );
+                                            }
+                                            return Container();
                                           });
-                                          print(dates);
-                                          Navigator.pop(context);
-                                        },
-                                      );
                                     },
                                   );
                                 },
@@ -197,6 +259,18 @@ class _BookingDetailScreenState extends State<BookingDetailScreen> {
                             context, 'Adults', 'Ages 13 or above', () {
                           setState(() {
                             numberOfAdults += 1;
+
+                            if (numberOfAdults >
+                                widget.property.maxAdultCount) {
+                              Fluttertoast.showToast(
+                                  msg:
+                                      'Max adults is ${widget.property.maxAdultCount}! Can\'t increase!',
+                                  backgroundColor: Colors.red,
+                                  timeInSecForIosWeb: 1,
+                                  gravity: ToastGravity.BOTTOM);
+
+                              numberOfAdults = widget.property.maxAdultCount;
+                            }
                           });
                         }, () {
                           setState(() {
@@ -212,6 +286,18 @@ class _BookingDetailScreenState extends State<BookingDetailScreen> {
                             context, 'Children', 'Ages 2-12', () {
                           setState(() {
                             numberOfChildren += 1;
+
+                            if (numberOfChildren >
+                                widget.property.maxChildCount) {
+                              Fluttertoast.showToast(
+                                  msg:
+                                      'Max children is ${widget.property.maxChildCount}! Can\'t increase!',
+                                  backgroundColor: Colors.red,
+                                  timeInSecForIosWeb: 1,
+                                  gravity: ToastGravity.BOTTOM);
+
+                              numberOfChildren = widget.property.maxChildCount;
+                            }
                           });
                         }, () {
                           setState(() {

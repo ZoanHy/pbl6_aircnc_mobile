@@ -18,6 +18,7 @@ class WishlistBloc extends Bloc<WishlistEvent, WishlistState> {
       LoadAllWishlistEvent event, Emitter<WishlistState> emit) async {
     List<List<Property>> wishlistPropertiesPage =
         await WishlistRepo.getAllPagesWishlist();
+    emit(LoadingWishlistPageState());
 
     emit(LoadAllWishlistState(wishlistPropertiesPage: wishlistPropertiesPage));
   }

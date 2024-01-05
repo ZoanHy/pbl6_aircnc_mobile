@@ -92,7 +92,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         ],
                       ),
                     ))
-                : Center(),
+                : Container(),
           );
         }
         return Container();

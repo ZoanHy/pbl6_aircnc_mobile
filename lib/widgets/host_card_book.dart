@@ -49,6 +49,8 @@ class _HostCardBookState extends State<HostCardBook>
 
   @override
   Widget build(BuildContext context) {
+    final size = MediaQuery.of(context).size;
+
     return Padding(
       padding: const EdgeInsets.only(bottom: 1),
       child: Row(
@@ -112,57 +114,68 @@ class _HostCardBookState extends State<HostCardBook>
                           ),
                         ),
                         Positioned(
-                          child: ListTile(
-                            leading: Icon(
-                              FontAwesome.note_sticky,
-                              color: Colors.purple,
-                            ),
-                            title: Text(
-                                'Reviews: ${widget.hostInfoDetail.numberOfReviews}',
-                                style: TextStyle(
-                                    fontSize: 20, fontWeight: FontWeight.w500)),
+                          child: Row(
+                            children: [
+                              Icon(
+                                FontAwesome.note_sticky,
+                                color: Colors.purple,
+                              ),
+                              SizedBox(
+                                width: 10,
+                              ),
+                              Text(
+                                  'Reviews: ${widget.hostInfoDetail.numberOfReviews}',
+                                  style: TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.w500)),
+                            ],
                           ),
                           right: 0,
                           top: 10,
-                          left: 150,
+                          left: 140,
                         ),
                         Positioned(
-                          child: ListTile(
-                            leading: Icon(
-                              Icons.star,
-                              size: 20,
-                              color: Color.fromRGBO(254, 178, 7, 5),
-                            ),
-                            title: Text(
-                                'Rating: ${(widget.hostInfoDetail.rating).toStringAsFixed(2)}',
-                                style: TextStyle(
-                                    fontSize: 20, fontWeight: FontWeight.w500)),
+                          child: Row(
+                            children: [
+                              Icon(
+                                Icons.star,
+                                color: Color.fromRGBO(254, 178, 7, 5),
+                              ),
+                              SizedBox(
+                                width: 10,
+                              ),
+                              Text(
+                                  'Rating: ${(widget.hostInfoDetail.rating).toStringAsFixed(2)}',
+                                  style: TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.w500)),
+                            ],
                           ),
                           right: 0,
                           top: 50,
-                          left: 150,
+                          left: 140,
                         ),
                         Positioned(
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                'Joining date at:',
+                                'Joined at:',
                                 style: TextStyle(
-                                    fontSize: 20, fontWeight: FontWeight.bold),
+                                    fontSize: 16, fontWeight: FontWeight.bold),
                               ),
                               Padding(
                                 padding: const EdgeInsets.only(top: 10),
                                 child: Text(
                                   '${DateFormat('dd/MM/yyyy').format(widget.hostInfoDetail.joinedAt)}',
-                                  style: TextStyle(fontSize: 18),
+                                  style: TextStyle(fontSize: 16),
                                 ),
                               )
                             ],
                           ),
                           right: 0,
-                          top: 100,
-                          left: 170,
+                          top: 90,
+                          left: 175,
                         )
                       ],
                     ),

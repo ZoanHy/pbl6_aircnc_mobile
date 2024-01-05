@@ -105,6 +105,10 @@ class _TestApiScreenState extends State<TestApiScreen> {
     print(detail);
   }
 
+  void getBookingDateOfProperty() async {
+    await BookingRepo.getTimeOfBookingIsInProperty(propertyId: 1);
+  }
+
   // void postABooking() async {
   //   signIn();
   //   DateTime startDate = DateTime.now().add(Duration(days: 3));
@@ -133,7 +137,7 @@ class _TestApiScreenState extends State<TestApiScreen> {
     // getDetailProperty();
     // addPropertyToWishList();
     // removePropertyToWishList();
-
+    getBookingDateOfProperty();
     return Scaffold(
       appBar: AppBar(title: Text('Test api')),
     );

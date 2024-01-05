@@ -50,8 +50,10 @@ class BookCoverBack extends StatelessWidget {
               Text(
                 hostInfoDetail.name,
                 textAlign: TextAlign.center,
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
                 style: TextStyle(
-                  fontSize: 25,
+                  fontSize: 20,
                   color: Colors.blue.shade700,
                   fontWeight: FontWeight.w700,
                 ),

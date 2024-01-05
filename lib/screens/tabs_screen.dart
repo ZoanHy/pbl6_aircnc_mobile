@@ -92,12 +92,7 @@ class _TabsScreenState extends State<TabsScreen> {
       bloc: authBloc,
       builder: (context, state) {
         switch (state.runtimeType) {
-          case LoadingTabsPageState:
-            return Scaffold(
-              body: Center(
-                child: CircularProgressIndicator(),
-              ),
-            );
+        
           case AunthenticateInitializedState:
             final initState = state as AunthenticateInitializedState;
             user = initState.user;

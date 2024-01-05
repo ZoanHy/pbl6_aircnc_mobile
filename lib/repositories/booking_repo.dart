@@ -2,14 +2,18 @@ import 'dart:convert';
 import 'dart:developer';
 
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:intl/intl.dart';
 import 'package:pbl6_aircnc/models/booking.dart';
 import 'package:http/http.dart' as http;
+import 'package:pbl6_aircnc/models/booking_date.dart';
 
 class BookingRepo {
   static String baseUrl = 'pbl6.whitemage.tech';
   static var guestUrl = 'api/bookings/guest';
   static var checkInUrl = 'api/check-in';
   static var postBooking = 'api/bookings';
+  static var bookingOfPropertyUrl = 'api/bookings/property';
+
   static final FlutterSecureStorage storage = const FlutterSecureStorage();
 
   static Future<List<Booking>> getAllBookingOfGuest(
@@ -175,6 +179,44 @@ class BookingRepo {
     } catch (e) {
       log(e.toString());
       throw Exception('Error create payment');
+    }
+  }
+
+  static Future<List<List<DateTime>>> getTimeOfBookingIsInProperty(
+      {required int propertyId}) async {
+    Map<String, dynamic> queryParameters = {
+      'propertyId': propertyId.toString(),
+      'fromDate': DateFormat('MM/dd/yyyy').format(DateTime.now()),
+      'toDate': DateFormat('MM/dd/yyyy')
+          .format(DateTime.now().add(Duration(days: 365))),
+    };
+
+    List<List<DateTime>> lstBookingDateTimes = [];
+
+    try {
+      var client = http.Client();
+      final uri = Uri.https(
+          baseUrl, '${bookingOfPropertyUrl}/${propertyId}', queryParameters);
+      var headers = {"Content-Type": "application/json"};
+      var response = await client.get(uri, headers: headers);
+
+      var result = jsonDecode(response.body);
+
+      for (int i = 0; i < result.length; i++) {
+        BookingDate bookingDate =
+            BookingDate.fromJson(result[i] as Map<String, dynamic>);
+        List<DateTime> subLstBookingDateTime = [
+          bookingDate.checkInDate,
+          bookingDate.checkOutDate
+        ];
+
+        lstBookingDateTimes.add(subLstBookingDateTime);
+      }
+
+      return lstBookingDateTimes;
+    } catch (e) {
+      log('Booking: ${e.toString()}');
+      throw Exception('Not get list property');
     }
   }
 }

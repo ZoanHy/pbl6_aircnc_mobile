@@ -130,15 +130,16 @@ class _BookingCardState extends State<BookingCard> {
                           child: Text(
                             'Title: ',
                             overflow: TextOverflow.ellipsis,
+                            maxLines: 2,
                             style: TextStyle(
-                                fontSize: 18, fontWeight: FontWeight.bold),
+                                fontSize: 16, fontWeight: FontWeight.bold),
                           ),
                         ),
                         Expanded(
                           child: Text(
                             '${widget.booking.propertyName}',
                             overflow: TextOverflow.ellipsis,
-                            style: TextStyle(fontSize: 18),
+                            style: TextStyle(fontSize: 16),
                           ),
                         )
                       ],
@@ -152,11 +153,11 @@ class _BookingCardState extends State<BookingCard> {
                         Text(
                           'Host name: ',
                           style: TextStyle(
-                              fontSize: 18, fontWeight: FontWeight.bold),
+                              fontSize: 16, fontWeight: FontWeight.bold),
                         ),
                         Text(
                           '${widget.booking.hostName}',
-                          style: TextStyle(fontSize: 18),
+                          style: TextStyle(fontSize: 16),
                         )
                       ],
                     ),
@@ -169,11 +170,11 @@ class _BookingCardState extends State<BookingCard> {
                         Text(
                           'Check in: ',
                           style: TextStyle(
-                              fontSize: 18, fontWeight: FontWeight.bold),
+                              fontSize: 16, fontWeight: FontWeight.bold),
                         ),
                         Text(
                           '${formatDateFunc(widget.booking.checkInDate)}',
-                          style: TextStyle(fontSize: 18),
+                          style: TextStyle(fontSize: 16),
                         )
                       ],
                     ),
@@ -186,11 +187,11 @@ class _BookingCardState extends State<BookingCard> {
                         Text(
                           'Check out: ',
                           style: TextStyle(
-                              fontSize: 18, fontWeight: FontWeight.bold),
+                              fontSize: 16, fontWeight: FontWeight.bold),
                         ),
                         Text(
                           '${formatDateFunc(widget.booking.checkOutDate)}',
-                          style: TextStyle(fontSize: 18),
+                          style: TextStyle(fontSize: 16),
                         )
                       ],
                     ),
@@ -203,14 +204,18 @@ class _BookingCardState extends State<BookingCard> {
                         Text(
                           'Total Price: ',
                           style: TextStyle(
-                              fontSize: 18, fontWeight: FontWeight.bold),
+                              fontSize: 16, fontWeight: FontWeight.bold),
                         ),
-                        Text(
-                          '${NumberFormat.currency(locale: 'vi_VN').format(widget.booking.totalPrice)}',
-                          style: TextStyle(
-                              fontSize: 18,
-                              color: Colors.red,
-                              fontWeight: FontWeight.bold),
+                        Expanded(
+                          child: Text(
+                            '${NumberFormat.currency(locale: 'vi_VN').format(widget.booking.totalPrice)}',
+                            overflow: TextOverflow.ellipsis,
+                            maxLines: 2,
+                            style: TextStyle(
+                                fontSize: 16,
+                                color: Colors.red,
+                                fontWeight: FontWeight.bold),
+                          ),
                         )
                       ],
                     ),
@@ -223,12 +228,12 @@ class _BookingCardState extends State<BookingCard> {
                         Text(
                           'State: ',
                           style: TextStyle(
-                              fontSize: 18, fontWeight: FontWeight.bold),
+                              fontSize: 16, fontWeight: FontWeight.bold),
                         ),
                         Text(
                           '${widget.booking.status}',
                           style: TextStyle(
-                              fontSize: 18,
+                              fontSize: 16,
                               color: switchColorByBookingStatus(
                                   '${widget.booking.status}')),
                         )
@@ -259,7 +264,7 @@ class _BookingCardState extends State<BookingCard> {
                           padding: const EdgeInsets.all(10.0),
                           child: Text(
                             "Payment",
-                            style: TextStyle(color: Colors.white, fontSize: 18),
+                            style: TextStyle(color: Colors.white, fontSize: 16),
                           ),
                         )),
                   ),
@@ -282,7 +287,7 @@ class _BookingCardState extends State<BookingCard> {
                               child: Text(
                                 "Canncel",
                                 style: TextStyle(
-                                    color: Colors.white, fontSize: 18),
+                                    color: Colors.white, fontSize: 16),
                               ),
                             )),
                         SizedBox(
@@ -303,7 +308,7 @@ class _BookingCardState extends State<BookingCard> {
                               child: Text(
                                 "QR Code",
                                 style: TextStyle(
-                                    color: Colors.white, fontSize: 18),
+                                    color: Colors.white, fontSize: 16),
                               ),
                             )),
                         SizedBox(

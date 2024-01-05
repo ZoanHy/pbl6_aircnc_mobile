@@ -2,13 +2,8 @@ import 'dart:async';
 
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
-import 'package:flutter/material.dart';
 import 'package:pbl6_aircnc/models/user.dart';
 import 'package:pbl6_aircnc/repositories/auth_repo.dart';
-import 'package:pbl6_aircnc/screens/home_screen.dart';
-import 'package:pbl6_aircnc/screens/profile_screen.dart';
-import 'package:pbl6_aircnc/screens/sign_in_screen.dart';
-import 'package:pbl6_aircnc/screens/wishlist_screen.dart';
 
 part 'auth_event.dart';
 part 'auth_state.dart';
@@ -36,7 +31,8 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       emit(AunthenticateInitializedState(user: user));
     } else {
       print('emit error');
-      emit(AuthSignInStatusState(status: true));
+      emit(AuthErrorState());
+      emit(AunthenticateUninitializedState());
     }
   }
 
@@ -64,8 +60,6 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
 
   FutureOr<void> _onAuthInitEvent(
       AuthInitEvent event, Emitter<AuthState> emit) async {
-    emit(LoadingTabsPageState());
-    await Future.delayed(Duration(seconds: 2));
     emit(AunthenticateInitializedState(user: event.user));
   }
 }

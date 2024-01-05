@@ -73,26 +73,19 @@ class _PropertyDetailScreenState extends State<PropertyDetailScreen> {
                     Padding(
                       padding: const EdgeInsets.only(top: 25),
                       child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Row(
-                            children: [
-                              Text(
-                                  '${NumberFormat.currency(locale: 'vi_VN').format(detailProperty.pricePerNight)}',
-                                  style: TextStyle(
-                                      fontSize: 17,
-                                      fontWeight: FontWeight.w600)),
-                              SizedBox(
-                                width: 5,
-                              ),
-                              Text('/night',
-                                  style: TextStyle(
-                                      fontSize: 17,
-                                      fontWeight: FontWeight.w400))
-                            ],
-                          ),
+                          Text(
+                              '${NumberFormat.currency(locale: 'vi_VN').format(detailProperty.pricePerNight)}',
+                              style: TextStyle(
+                                  fontSize: 17, fontWeight: FontWeight.w600)),
+                          Text('/night',
+                              style: TextStyle(
+                                  fontSize: 17, fontWeight: FontWeight.w400))
                         ],
                       ),
                     ),
+                    SizedBox(width: 5,),
                     InkWell(
                       onTap: () {
                         Navigator.of(context).push(MaterialPageRoute(
@@ -130,11 +123,7 @@ class _PropertyDetailScreenState extends State<PropertyDetailScreen> {
                         clipBehavior: Clip.antiAlias,
                         width: size.width,
                         height: size.width - 50,
-                        decoration: BoxDecoration(
-                            // borderRadius: BorderRadius.only(
-                            //     topLeft: Radius.circular(16),
-                            //     topRight: Radius.circular(16)),
-                            ),
+                        decoration: BoxDecoration(),
                         child: PageView(
                           controller: controller,
                           onPageChanged: (value) {
@@ -245,6 +234,7 @@ class _PropertyDetailScreenState extends State<PropertyDetailScreen> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
+                        overflow: TextOverflow.ellipsis,
                         '${detailProperty.title}',
                         style: TextStyle(
                             fontSize: 30, fontWeight: FontWeight.w500),
@@ -279,6 +269,7 @@ class _PropertyDetailScreenState extends State<PropertyDetailScreen> {
                             },
                             child: Text(
                               '${detailProperty.numberOfReviews} reviews',
+                              overflow: TextOverflow.ellipsis,
                               style: TextStyle(
                                   fontSize: 17,
                                   fontWeight: FontWeight.w500,
@@ -300,10 +291,14 @@ class _PropertyDetailScreenState extends State<PropertyDetailScreen> {
                           SizedBox(
                             width: 5,
                           ),
-                          Text(
-                              '${detailProperty.address} - ${detailProperty.city}',
-                              style: TextStyle(
-                                  fontSize: 17, fontWeight: FontWeight.w400))
+                          Expanded(
+                            child: Text(
+                                '${detailProperty.address} ,\n ${detailProperty.city}',
+                                overflow: TextOverflow.ellipsis,
+                                maxLines: 2,
+                                style: TextStyle(
+                                    fontSize: 17, fontWeight: FontWeight.w400)),
+                          )
                         ],
                       ),
                       const SizedBox(
@@ -320,7 +315,9 @@ class _PropertyDetailScreenState extends State<PropertyDetailScreen> {
                         bloc: hostBloc,
                         builder: (context, state) {
                           if (state is LoadDetailHostState) {
-                            return HostCardBook(hostInfoDetail: state.host,);
+                            return HostCardBook(
+                              hostInfoDetail: state.host,
+                            );
                           }
                           return SizedBox.shrink();
                         },
@@ -498,7 +495,7 @@ class _PropertyDetailScreenState extends State<PropertyDetailScreen> {
             )),
           );
         }
-        return Center();
+        return Container();
       },
     );
   }

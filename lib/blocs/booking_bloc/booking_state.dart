@@ -60,3 +60,14 @@ class LoadPaymentUrlState extends BookingState {
     required this.urlPayment,
   });
 }
+
+class CheckBookingShowToastCheckAgainState extends BookingState {}
+
+class LoadBookingDateState extends BookingState {
+  final List<List<DateTime>> lstDateTimes;
+  LoadBookingDateState({
+    required this.lstDateTimes,
+  });
+}
+
+class LoadingBookingPageState extends BookingState {}

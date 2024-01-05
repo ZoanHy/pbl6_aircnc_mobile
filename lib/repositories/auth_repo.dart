@@ -5,7 +5,7 @@ import 'dart:developer';
 // import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:pbl6_aircnc/models/user.dart' as UserModel;
+import 'package:pbl6_aircnc/models/user.dart';
 import 'package:http/http.dart' as http;
 
 class AuthRepo {
@@ -15,7 +15,7 @@ class AuthRepo {
   static final FlutterSecureStorage storage = const FlutterSecureStorage();
 
 
-  static Future<UserModel.User?> signIn(
+  static Future<User?> signIn(
       String usernameOrEmail, String password) async {
     try {
       final uri = Uri.parse('https://${baseUrl}/${signInUrl}');
@@ -30,8 +30,8 @@ class AuthRepo {
       if (response.statusCode == 200) {
         final result = jsonDecode(response.body);
 
-        UserModel.User user =
-            UserModel.User.fromJson(result['user'] as Map<String, dynamic>);
+        User user =
+            User.fromJson(result['user'] as Map<String, dynamic>);
         String accessToken = result['accessToken'];
         String role = result['role'];
         String refreshToken = result['refreshToken'];

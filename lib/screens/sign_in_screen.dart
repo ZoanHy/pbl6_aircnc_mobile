@@ -60,6 +60,11 @@ class _SignInScreenState extends State<SignInScreen> {
           if (state is AunthenticateInitializedState) {
             User user = state.user;
             print(user);
+            Fluttertoast.showToast(
+                msg: 'Login success',
+                backgroundColor: Colors.green,
+                timeInSecForIosWeb: 1);
+
             Navigator.push(
                 context,
                 MaterialPageRoute(
@@ -69,11 +74,11 @@ class _SignInScreenState extends State<SignInScreen> {
                 ));
             context.loaderOverlay.hide();
           } else if (state is AuthErrorState) {
-            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                content: Text(
-              'Login failed',
-              style: TextStyle(color: Colors.red),
-            )));
+            Fluttertoast.showToast(
+                msg: 'Login failed',
+                backgroundColor: Colors.red,
+                timeInSecForIosWeb: 1);
+
             context.loaderOverlay.hide();
           }
         },
@@ -218,7 +223,7 @@ class _SignInScreenState extends State<SignInScreen> {
                                             activeColor: Color(0xFF416FDF),
                                           ),
                                           const Text(
-                                            'Remember me',
+                                            'Remember \nme',
                                             style: TextStyle(
                                               color: Colors.black45,
                                             ),
@@ -227,7 +232,7 @@ class _SignInScreenState extends State<SignInScreen> {
                                       ),
                                       GestureDetector(
                                         child: Text(
-                                          'Forget password?',
+                                          'Forget \npassword?',
                                           style: TextStyle(
                                             fontWeight: FontWeight.bold,
                                             color: Color(0xFF416FDF),

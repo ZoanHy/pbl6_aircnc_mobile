@@ -63,7 +63,7 @@ class _BookFlipState extends State<BookFlip>
           return FractionalTranslation(
             translation: Offset(-0.5 * _flipAnimation.value, 0),
             child: Container(
-              constraints: const BoxConstraints(maxHeight: 220),
+              constraints: const BoxConstraints(maxHeight: 250),
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 textDirection: TextDirection.rtl,
@@ -90,7 +90,8 @@ class _BookFlipState extends State<BookFlip>
                                           3, 2, Constants.perspectiveValue)
                                       ..rotateY(-pi),
                                     alignment: Alignment.center,
-                                    child: BookCoverFront(widget.hostInfoDetail),
+                                    child:
+                                        BookCoverFront(widget.hostInfoDetail),
                                   ),
                                 ),
                         ],

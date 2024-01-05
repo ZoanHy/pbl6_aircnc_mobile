@@ -13,8 +13,8 @@ class Property {
   String? type;
   int? bedCount;
   int? bathroomCount;
-  int? maxAdultCount;
-  int? maxChildCount;
+  int maxAdultCount;
+  int maxChildCount;
   double? latitude;
   double? longitude;
   String? address;
